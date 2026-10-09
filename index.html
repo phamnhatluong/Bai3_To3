@@ -1,0 +1,783 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Đường Tiệm Cận Hàm Số</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout concept: dark "radar console". Hero canvas of drifting hyperbolas, sticky quick menu,
+   theory tabs with one morphing graph, comparison cards, sandbox, Casio flowcharts, flashcards, quiz.
+   Colour roles: cyan = graph, magenta = vertical asymptote, amber = horizontal/oblique asymptote. */
+:root{
+  --bg:#060912; --panel:rgba(14,22,46,.62); --panel2:#111a33; --navbg:rgba(6,9,18,.8);
+  --line:rgba(120,170,255,.2); --line2:rgba(120,170,255,.38);
+  --fg:#e6edff; --mut:#9aa8cb; --grid:rgba(120,160,255,.11); --plbg:#070c1a;
+  --cyan:#25e8ff; --mag:#ff4fa3; --amber:#ffcb47; --lime:#6dfa91; --bad:#ff7088;
+  --glow:rgba(37,232,255,.55); --onacc:#031018; --lcd:#08160f; --lcdfg:#7dffb0;
+  --ff-d:'Chakra Petch','Be Vietnam Pro',sans-serif; --ff-b:'Be Vietnam Pro',system-ui,sans-serif; --ff-m:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#eef2fb; --panel:rgba(255,255,255,.72); --panel2:#e3eafa; --navbg:rgba(238,242,251,.84);
+    --line:rgba(30,60,140,.18); --line2:rgba(30,60,140,.36);
+    --fg:#0d1633; --mut:#4a5878; --grid:rgba(30,70,160,.09); --plbg:#fbfcff;
+    --cyan:#0078a0; --mag:#c2185b; --amber:#955f00; --lime:#17753a; --bad:#c62840;
+    --glow:rgba(0,120,160,.3); --onacc:#ffffff; color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#eef2fb; --panel:rgba(255,255,255,.72); --panel2:#e3eafa; --navbg:rgba(238,242,251,.84);
+  --line:rgba(30,60,140,.18); --line2:rgba(30,60,140,.36);
+  --fg:#0d1633; --mut:#4a5878; --grid:rgba(30,70,160,.09); --plbg:#fbfcff;
+  --cyan:#0078a0; --mag:#c2185b; --amber:#955f00; --lime:#17753a; --bad:#c62840;
+  --glow:rgba(0,120,160,.3); --onacc:#ffffff; color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:radial-gradient(var(--grid) 1px,transparent 1.2px) 0 0/26px 26px,var(--bg);color:var(--fg);font:400 16px/1.65 var(--ff-b);overflow-x:clip}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.wrap{max-width:1200px;margin-inline:auto;padding-inline:16px}
+.tx svg{max-width:none}
+h1,h2,h3{font-family:var(--ff-d);margin:0;text-wrap:balance;line-height:1.12}
+p{margin:0}
+.eyebrow{font:600 12px var(--ff-m);letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+.lead{color:var(--mut);max-width:62ch}
+.sec{padding-block:clamp(44px,7vw,88px);scroll-margin-top:60px}
+.sec h2{font-size:clamp(26px,4.2vw,42px);font-weight:700;margin-bottom:12px}
+.glass{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:4px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.glass::before,.glass::after{content:'';position:absolute;width:14px;height:14px;pointer-events:none}
+.glass::before{top:-1px;left:-1px;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan)}
+.glass::after{right:-1px;bottom:-1px;border-bottom:2px solid var(--cyan);border-right:2px solid var(--cyan)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+#hcv{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero-in{position:relative;padding-block:clamp(40px,8vw,92px) clamp(28px,5vw,52px)}
+.hero h1{font-size:clamp(30px,6.4vw,68px);font-weight:700;text-transform:uppercase;letter-spacing:.01em;max-width:15ch}
+.hero h1 small{display:block;font:600 clamp(13px,2vw,17px) var(--ff-m);letter-spacing:.22em;color:var(--amber);margin-bottom:14px}
+.hero h1 em{font-style:normal;color:var(--cyan);text-shadow:0 0 28px var(--glow)}
+.hero .lead{margin-top:18px;font-size:clamp(15px,2vw,18px);max-width:56ch}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:clamp(26px,4vw,44px);max-width:880px}
+.tile{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;background:var(--panel);border:1px solid var(--line);border-radius:4px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:border-color .2s,transform .2s}
+.tile:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.tile svg{flex:none;width:64px;height:48px}
+.tile b{display:block;font:600 11px var(--ff-m);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+.tile span.tx{font-size:18px}
+.ic-c{fill:none;stroke:var(--cyan);stroke-width:2.4;stroke-linecap:round}
+.ic-v{fill:none;stroke:var(--mag);stroke-width:1.8;stroke-dasharray:4 3}
+.ic-s{fill:none;stroke:var(--amber);stroke-width:1.8;stroke-dasharray:4 3}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--navbg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:8px}
+.nav-l{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.nav-l::-webkit-scrollbar{display:none}
+.nl{flex:none;white-space:nowrap;padding:14px 12px;font-size:14px;font-weight:500;color:var(--mut);background:none;border:0;border-bottom:2px solid transparent;text-decoration:none}
+.nl b{font:600 12px var(--ff-m);color:var(--cyan);margin-right:7px}
+.nl:hover,.nl.on{color:var(--fg);border-bottom-color:var(--cyan)}
+.thm{flex:none;width:36px;height:36px;border:1px solid var(--line2);border-radius:4px;background:none;display:grid;place-items:center}
+.thm svg{width:18px;height:18px;fill:none;stroke:var(--fg);stroke-width:2}
+.nav-prog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--cyan);transform:scaleX(0);transform-origin:0 50%;box-shadow:0 0 10px var(--cyan)}
+
+/* theory */
+.rail{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:26px;border:1px solid var(--line);background:var(--panel);border-radius:4px}
+.rail button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:14px 16px;background:none;border:0;border-right:1px solid var(--line);text-align:left;color:var(--mut);min-width:0}
+.rail button:last-of-type{border-right:0}
+.rail button b{font:600 12px var(--ff-m);letter-spacing:.1em;color:var(--cyan)}
+.rail button span{font:600 clamp(14px,2.2vw,18px) var(--ff-d);color:var(--fg)}
+.rail button.on{background:rgba(37,232,255,.07)}
+.ind{position:absolute;left:0;bottom:-1px;height:3px;width:0;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+.th{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:24px;margin-top:24px;align-items:start}
+.gcard{position:sticky;top:76px;padding:12px;order:1}
+.info{order:0;min-width:0}
+.panel{padding:4px 0}
+.panel h3{font-size:clamp(20px,3vw,28px);display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.panel p{margin-bottom:14px}
+.chip{font:600 12px var(--ff-m);letter-spacing:.1em;padding:3px 9px;border-radius:3px;color:var(--onacc)}
+.chip.m{background:var(--mag)} .chip.a{background:var(--amber)}
+.lims{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.lims.two,.lims.one{grid-template-columns:1fr}
+.lim{padding:12px 14px;text-align:left;font-size:15px;background:var(--panel);border:1px solid var(--line);border-radius:4px;transition:border-color .2s,background .2s;min-width:0;overflow-x:auto}
+.lim:hover{border-color:var(--line2)}
+.lim.on{border-color:var(--cyan);background:rgba(37,232,255,.09);box-shadow:0 0 0 1px var(--cyan) inset}
+.tip{border-left:3px solid var(--amber);padding:8px 14px;background:var(--panel);border-radius:0 4px 4px 0;color:var(--fg)}
+.formula{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.formula .lim{flex:1 1 200px;cursor:default}
+.slr{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:4px;background:var(--panel);margin-bottom:12px}
+.slr label{font:600 13px var(--ff-m);color:var(--amber)}
+.slr output{font:600 14px var(--ff-m);min-width:3ch;text-align:right}
+input[type=range]{width:100%;accent-color:var(--cyan);min-width:0}
+.fxs{min-height:3.2em;margin-bottom:10px;color:var(--fg)}
+.plot{display:block;width:100%;height:auto;border:1px solid var(--line)}
+.pl-bg{fill:var(--plbg)} .pl-grid{stroke:var(--grid);stroke-width:1;fill:none}
+.pl-axis{stroke:var(--mut);stroke-width:1.3;fill:none}
+.pl-tk{fill:var(--mut);font:10px var(--ff-m)}
+.pl-c{fill:none;stroke:var(--cyan);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px var(--glow))}
+.pl-v{stroke:var(--mag);stroke-width:2.2;stroke-dasharray:8 6}
+.pl-s{stroke:var(--amber);stroke-width:2.2;stroke-dasharray:8 6}
+.pl-lv{fill:var(--mag);font:600 14px var(--ff-m)} .pl-ls{fill:var(--amber);font:600 14px var(--ff-m)}
+.pl-dot{fill:var(--bg);stroke:var(--fg);stroke-width:3}
+.pl-gap{stroke:var(--fg);stroke-width:1.6;stroke-dasharray:3 4}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:13px;color:var(--mut)}
+.legend i{display:inline-block;width:18px;height:0;border-top:3px solid;vertical-align:middle;margin-right:6px}
+.readout{margin-top:8px;font:500 13px/1.5 var(--ff-m);font-variant-numeric:tabular-nums;color:var(--fg);min-height:3em;overflow-wrap:anywhere}
+
+/* forms */
+.cmp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:28px}
+.fcard{padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.fcard h3{font-size:22px}
+.fcard .fn{font-size:20px;overflow-x:auto;padding-block:4px}
+.fcard .cond{color:var(--mut);font-size:14px}
+.rows{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:4px;background:var(--panel)}
+.row b{font:600 12px var(--ff-m);letter-spacing:.08em;text-transform:uppercase;color:var(--mut);grid-column:1/-1}
+.row .tx,.row .no{font-size:17px}
+.pill{font:600 11px var(--ff-m);letter-spacing:.1em;padding:3px 8px;border-radius:3px}
+.pill.y{background:var(--lime);color:var(--onacc)} .pill.n{border:1px solid var(--bad);color:var(--bad)}
+.row .no{color:var(--mut)}
+.ex{font-size:14px;color:var(--mut)}
+
+/* sandbox */
+.sb{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:24px;margin-top:28px;align-items:start}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line2);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.seg button{padding:10px 8px;background:none;border:0;font:600 14px var(--ff-d);color:var(--mut)}
+.seg button.on{background:var(--cyan);color:var(--onacc)}
+.sbc{padding:18px;min-width:0}
+.sl{display:grid;grid-template-columns:2.2ch 1fr 4ch;gap:12px;align-items:center;margin-bottom:8px}
+.sl label{font:600 15px var(--ff-m);color:var(--amber)}
+.sl output{font:600 14px var(--ff-m);text-align:right}
+.sbfn{margin:14px 0;padding:10px 12px;border:1px dashed var(--line2);border-radius:4px;overflow-x:auto;font-size:18px}
+.resl{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.resl li{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 12px;border:1px solid var(--line);border-radius:4px;background:var(--panel);min-width:0}
+.tag{font:600 11px var(--ff-m);letter-spacing:.08em;padding:3px 7px;border-radius:3px;color:var(--onacc)}
+.tag.v{background:var(--mag)} .tag.h,.tag.s{background:var(--amber)} .tag.x{background:var(--mut)}
+.warn{color:var(--amber);font-size:14px}
+
+/* casio */
+.ctabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}
+.ctabs button{padding:10px 18px;border:1px solid var(--line2);border-radius:4px;background:none;font:600 15px var(--ff-d)}
+.ctabs button.on{background:var(--cyan);border-color:var(--cyan);color:var(--onacc)}
+.cas{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:24px;margin-top:20px;align-items:start}
+.fl{display:flex;flex-direction:column;align-items:center;padding:20px 16px}
+.nd{padding:12px 16px;border:1px solid var(--line2);border-radius:4px;background:var(--panel2);text-align:center;max-width:100%;overflow-x:auto}
+.nd.start{border-color:var(--cyan);font-size:18px}
+.nd.q{border-style:dashed;border-color:var(--amber)}
+.ar{display:block;width:2px;height:22px;background:var(--line2);position:relative;margin:0}
+.ar::after{content:'';position:absolute;bottom:-1px;left:-4px;border:5px solid transparent;border-top:7px solid var(--line2);border-bottom:0}
+.brs{--n:3;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:10px;width:100%;position:relative;padding-top:22px}
+.brs::before{content:'';position:absolute;top:0;left:calc(50%/var(--n));right:calc(50%/var(--n));border-top:2px solid var(--line2)}
+.brs.n1::before{display:none}
+.brs.n1{--n:1}.brs.n2{--n:2}.brs.n3{--n:3}
+.br{display:flex;flex-direction:column;align-items:stretch;gap:8px;position:relative;min-width:0}
+.br::before{content:'';position:absolute;top:-22px;left:50%;height:22px;border-left:2px solid var(--line2)}
+.cond{text-align:center;font-size:14px;color:var(--mut);padding-top:4px}
+.res{font-size:15px}
+.nd.good{border-color:var(--lime)} .nd.warn{border-color:var(--amber)} .nd.none{border-color:var(--bad);color:var(--bad)}
+.calc{padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.calc h3{font-size:18px}
+.lcd{background:var(--lcd);color:var(--lcdfg);border:1px solid #1c3a2b;border-radius:4px;padding:10px 12px;font:500 14px/1.5 var(--ff-m);box-shadow:inset 0 0 18px rgba(0,0,0,.6);overflow-x:auto}
+.lcd .e{opacity:.8}.lcd .x{opacity:.8}
+.lcd .r{text-align:right;font-size:24px;font-weight:600;letter-spacing:.02em;white-space:nowrap}
+.keys{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+kbd{font:600 12px var(--ff-m);border:1px solid var(--line2);border-bottom-width:3px;border-radius:5px;padding:2px 8px;background:var(--panel2);color:var(--fg)}
+.verdict{padding:10px 12px;border-left:3px solid var(--lime);background:var(--panel);font-size:15px;border-radius:0 4px 4px 0}
+.mini-seg{display:flex;gap:6px;flex-wrap:wrap}
+.mini-seg button{padding:6px 12px;border:1px solid var(--line2);border-radius:4px;background:none;font:600 13px var(--ff-m)}
+.mini-seg button.on{background:var(--amber);border-color:var(--amber);color:var(--onacc)}
+.fcs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:20px}
+.fc{perspective:900px;min-height:190px;background:none;border:0;padding:0;text-align:left}
+.fc-in{position:relative;width:100%;height:100%;min-height:190px;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-f,.fc-b{position:absolute;inset:0;padding:16px;border:1px solid var(--line2);border-radius:4px;background:var(--panel2);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;gap:8px;overflow:auto}
+.fc-b{transform:rotateY(180deg);border-color:var(--cyan)}
+.fc small{font:600 11px var(--ff-m);letter-spacing:.14em;color:var(--cyan)}
+.fc-f strong{font:600 17px/1.35 var(--ff-d)}
+.fc-h{margin-top:auto;font-size:12px;color:var(--mut)}
+
+/* quiz */
+.quiz{max-width:760px;margin-top:26px;padding:22px}
+.qdots{display:flex;gap:6px;margin-bottom:14px}
+.qdots i{height:4px;flex:1;background:var(--line2);border-radius:2px}
+.qdots i.d{background:var(--cyan)}
+.qq{font:600 clamp(17px,2.6vw,21px)/1.4 var(--ff-d);margin-bottom:16px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 14px;text-align:left;border:1px solid var(--line2);border-radius:4px;background:var(--panel);min-width:0;overflow-x:auto}
+.opt:hover:not(:disabled){border-color:var(--cyan)}
+.opt b{flex:none;font:600 13px var(--ff-m);color:var(--cyan);width:1.6em}
+.opt.ok{border-color:var(--lime);background:rgba(109,250,145,.12)}
+.opt.bad{border-color:var(--bad);background:rgba(255,112,136,.12)}
+.opt:disabled{cursor:default}
+.qe{margin-top:14px;padding:12px 14px;border-left:3px solid var(--cyan);background:var(--panel);border-radius:0 4px 4px 0}
+.qact{margin-top:14px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.btn{padding:10px 20px;border:0;border-radius:4px;background:var(--cyan);color:var(--onacc);font:700 14px var(--ff-d);letter-spacing:.04em}
+.score{font:700 clamp(40px,8vw,64px) var(--ff-d);color:var(--cyan)}
+footer{padding-block:32px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
+
+@media (max-width:960px){
+  .th,.sb,.cas{grid-template-columns:minmax(0,1fr)}
+  .gcard{position:static;order:-1}
+  .fcs{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  .tiles{grid-template-columns:1fr}
+  .cmp{grid-template-columns:1fr}
+  .rail button{padding:10px}
+  .rail button span{font-size:13px}
+  .rail button em{display:none}
+  .lims{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+  .fcs{grid-template-columns:1fr}
+  .brs{--n:1!important;padding-top:6px;gap:16px}
+  .brs::before{display:none}
+  .br::before{display:none}
+  .br{border-left:2px solid var(--line2);padding-left:12px}
+}
+@media (prefers-reduced-motion: reduce){
+  .fc-in,.tile,.lim{transition:none}
+}
+</style>
+
+<header class="hero" id="top">
+  <canvas id="hcv" aria-hidden="true"></canvas>
+  <div class="wrap hero-in">
+    <h1><small>BÀI 3</small>Đường <em>tiệm cận</em> của đồ thị hàm số</h1>
+    <p class="lead">Ba loại đường tiệm cận, hai dạng hàm số thường gặp và một quy trình bấm máy Casio, gói trong một trang. Mọi đồ thị bên dưới đều kéo, trượt và biến hình được.</p>
+    <div class="tiles">
+      <button class="tile" data-go="0"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="ic-v" d="M32 2V46"/><path class="ic-c" d="M35 4C35 28 42 38 62 40M29 44C29 20 22 10 2 8"/></svg><div><b>Tiệm cận đứng</b><span class="tx">$x=a$</span></div></button>
+      <button class="tile" data-go="1"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="ic-s" d="M2 18H62"/><path class="ic-c" d="M4 44C18 40 30 28 38 22C46 17 54 17 62 17.5"/></svg><div><b>Tiệm cận ngang</b><span class="tx">$y=m$</span></div></button>
+      <button class="tile" data-go="2"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="ic-s" d="M4 44L60 8"/><path class="ic-c" d="M4 28C10 36 24 32 34 26C44 20 52 14 60 6"/></svg><div><b>Tiệm cận xiên</b><span class="tx">$y=ax+b$</span></div></button>
+    </div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Menu nhanh">
+  <div class="wrap">
+    <div class="nav-l" id="navl">
+      <a class="nl" href="#ly-thuyet" data-k="0"><b>1</b>Tiệm cận đứng</a>
+      <a class="nl" href="#ly-thuyet" data-k="1"><b>2</b>Tiệm cận ngang</a>
+      <a class="nl" href="#ly-thuyet" data-k="2"><b>3</b>Tiệm cận xiên</a>
+      <a class="nl" href="#dang" data-k="3"><b>4</b>Dạng đặc biệt</a>
+      <a class="nl" href="#casio" data-k="4"><b>5</b>Bí quyết CASIO &amp; Mẹo nhớ nhanh</a>
+    </div>
+    <button class="thm" id="thm" aria-label="Đổi giao diện sáng hoặc tối"><svg viewBox="0 0 24 24"><path d="M21 13.5A8.5 8.5 0 1 1 10.5 3a7 7 0 0 0 10.5 10.5z"/></svg></button>
+  </div>
+  <div class="nav-prog" id="prog"></div>
+</nav>
+
+<main>
+<!-- LÝ THUYẾT -->
+<section class="sec" id="ly-thuyet">
+  <div class="wrap">
+    <p class="eyebrow">Lý thuyết cốt lõi</p>
+    <h2>Ba loại tiệm cận trên một đồ thị biến hình</h2>
+    <p class="lead">Chọn từng loại. Đường cong và các đường tiệm cận trượt mượt từ dạng này sang dạng khác. Điểm trắng chạy dọc đồ thị cho thấy khoảng cách đang thu hẹp.</p>
+
+    <div class="rail" id="rail" role="tablist" aria-label="Loại tiệm cận">
+      <button role="tab" data-t="0" class="on" aria-selected="true"><b>01</b><span>Tiệm cận đứng</span><em class="tx" style="font-style:normal">$x=a$</em></button>
+      <button role="tab" data-t="1" aria-selected="false"><b>02</b><span>Tiệm cận ngang</span><em class="tx" style="font-style:normal">$y=m$</em></button>
+      <button role="tab" data-t="2" aria-selected="false"><b>03</b><span>Tiệm cận xiên</span><em class="tx" style="font-style:normal">$y=ax+b$</em></button>
+      <i class="ind" id="ind"></i>
+    </div>
+
+    <div class="th" id="th">
+      <div class="info">
+        <div class="panel" id="pn0">
+          <h3><span class="chip m">TCĐ</span>Đường tiệm cận đứng</h3>
+          <p>Đường thẳng $x=a$ là tiệm cận đứng của đồ thị $y=f(x)$ nếu thỏa mãn <b>ít nhất một</b> trong bốn điều kiện giới hạn dưới đây. Bấm từng điều kiện để xem đồ thị đổi dạng.</p>
+          <div class="lims" id="lims0">
+            <button class="lim on" data-mode="0"><span class="tx">$\lim_{x\to a^+}f(x)=+\infty$</span></button>
+            <button class="lim" data-mode="1"><span class="tx">$\lim_{x\to a^-}f(x)=+\infty$</span></button>
+            <button class="lim" data-mode="2"><span class="tx">$\lim_{x\to a^+}f(x)=-\infty$</span></button>
+            <button class="lim" data-mode="3"><span class="tx">$\lim_{x\to a^-}f(x)=-\infty$</span></button>
+          </div>
+          <p class="tip">Trên hình, $f(x)=\dfrac{1}{x-1}$ hoặc $-\dfrac{1}{x-1}$ và $a=1$. Nhánh sáng là nhánh đang bám sát đường $x=a$.</p>
+        </div>
+        <div class="panel" id="pn1" hidden>
+          <h3><span class="chip a">TCN</span>Đường tiệm cận ngang</h3>
+          <p>Đường thẳng $y=m$ là tiệm cận ngang của đồ thị $y=f(x)$ nếu một trong hai giới hạn sau thỏa mãn. Chọn hướng để xem điểm trắng chạy ra vô cực.</p>
+          <div class="lims one" id="lims1">
+            <button class="lim on" data-dir="1"><span class="tx">$\lim_{x\to+\infty}f(x)=m$</span></button>
+            <button class="lim" data-dir="-1"><span class="tx">$\lim_{x\to-\infty}f(x)=m$</span></button>
+          </div>
+          <p class="tip">Trên hình, $f(x)=\dfrac{2x+1}{x-1}$ có TCN $y=2$. Đồ thị có tối đa hai tiệm cận ngang, mỗi phía vô cực một đường, và vẫn có thể cắt tiệm cận ngang.</p>
+        </div>
+        <div class="panel" id="pn2" hidden>
+          <h3><span class="chip a">TCX</span>Đường tiệm cận xiên</h3>
+          <p>Đường thẳng $y=ax+b$ với $a\ne0$ là tiệm cận xiên của đồ thị $y=f(x)$ nếu một trong hai giới hạn sau thỏa mãn.</p>
+          <div class="lims one" id="lims2">
+            <button class="lim on" data-dir="1"><span class="tx">$\lim_{x\to+\infty}\big[f(x)-(ax+b)\big]=0$</span></button>
+            <button class="lim" data-dir="-1"><span class="tx">$\lim_{x\to-\infty}\big[f(x)-(ax+b)\big]=0$</span></button>
+          </div>
+          <div class="formula">
+            <div class="lim tx">$a=\lim_{x\to\pm\infty}\dfrac{f(x)}{x}$</div>
+            <div class="lim tx">$b=\lim_{x\to\pm\infty}\big[f(x)-ax\big]$</div>
+          </div>
+          <div class="slr"><label for="slp">hệ số góc a</label><input id="slp" type="range" min="0" max="1.5" step="0.1" value="0.5"><output id="slpv" for="slp">0.5</output></div>
+          <div class="fxs" id="fxs"></div>
+          <p class="tip" id="slnote"></p>
+        </div>
+      </div>
+
+      <div class="glass gcard">
+        <svg class="plot" id="mainplot" role="img" aria-label="Đồ thị hàm số và các đường tiệm cận"></svg>
+        <div class="legend"><span><i style="border-color:var(--cyan)"></i>Đồ thị $f(x)$</span><span><i style="border-color:var(--mag);border-top-style:dashed"></i>Tiệm cận đứng</span><span><i style="border-color:var(--amber);border-top-style:dashed"></i>Tiệm cận ngang hoặc xiên</span></div>
+        <div class="readout" id="readout" aria-live="off"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HAI DẠNG -->
+<section class="sec" id="dang">
+  <div class="wrap">
+    <p class="eyebrow">Dạng đặc biệt</p>
+    <h2>Hai dạng hàm số thường gặp</h2>
+    <p class="lead">Nhận ra dạng hàm số là biết ngay các tiệm cận mà không cần tính giới hạn.</p>
+    <div class="cmp">
+      <article class="glass fcard">
+        <h3>Dạng 1</h3>
+        <div class="fn tx">$y=\dfrac{ax+b}{cx+d}$</div>
+        <div class="cond tx">Điều kiện: $c\ne0$, $ad-bc\ne0$</div>
+        <svg class="plot" id="mini1" role="img" aria-label="Đồ thị mẫu của dạng 1"></svg>
+        <div class="rows">
+          <div class="row"><b>Tiệm cận đứng</b><span class="tx">$x=-\dfrac{d}{c}$</span><span class="pill y">CÓ</span></div>
+          <div class="row"><b>Tiệm cận ngang</b><span class="tx">$y=\dfrac{a}{c}$</span><span class="pill y">CÓ</span></div>
+          <div class="row"><b>Tiệm cận xiên</b><span class="no">Không có</span><span class="pill n">KHÔNG</span></div>
+        </div>
+        <p class="ex tx">Ví dụ: $y=\dfrac{2x+1}{x-1}$ có TCĐ $x=1$ và TCN $y=2$.</p>
+      </article>
+      <article class="glass fcard">
+        <h3>Dạng 2</h3>
+        <div class="fn tx">$y=\dfrac{ax^2+bx+c}{px+q}$</div>
+        <div class="cond tx">Điều kiện: $p\ne0$, đa thức tử không chia hết cho mẫu</div>
+        <svg class="plot" id="mini2" role="img" aria-label="Đồ thị mẫu của dạng 2"></svg>
+        <div class="rows">
+          <div class="row"><b>Tiệm cận đứng</b><span class="tx">$x=-\dfrac{q}{p}$</span><span class="pill y">CÓ</span></div>
+          <div class="row"><b>Tiệm cận xiên</b><span class="tx">$y=Ax+B$ (thương của tử chia mẫu)</span><span class="pill y">CÓ</span></div>
+          <div class="row"><b>Tiệm cận ngang</b><span class="no">Không có</span><span class="pill n">KHÔNG</span></div>
+        </div>
+        <p class="ex tx">Ví dụ: $y=\dfrac{x^2+x}{2x-2}=\dfrac{x}{2}+1+\dfrac{1}{x-1}$ có TCĐ $x=1$ và TCX $y=\dfrac{x}{2}+1$.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- SANDBOX -->
+<section class="sec" id="sandbox">
+  <div class="wrap">
+    <p class="eyebrow">Mô phỏng thử nghiệm</p>
+    <h2>Tự chỉnh hệ số, đồ thị tự cập nhật</h2>
+    <p class="lead">Chọn dạng hàm số rồi kéo các thanh trượt. Các đường tiệm cận và kết luận bên dưới thay đổi ngay.</p>
+    <div class="sb">
+      <div class="glass sbc">
+        <div class="seg" id="sbseg"><button class="on" data-f="1">Dạng 1</button><button data-f="2">Dạng 2</button></div>
+        <div id="sbctl"></div>
+        <div class="sbfn tx" id="sbfn"></div>
+        <ul class="resl" id="sbres"></ul>
+      </div>
+      <div class="glass gcard" style="position:static;order:0;padding:12px">
+        <svg class="plot" id="sbplot" role="img" aria-label="Đồ thị mô phỏng"></svg>
+        <div class="legend"><span><i style="border-color:var(--cyan)"></i>Đồ thị</span><span><i style="border-color:var(--mag);border-top-style:dashed"></i>Tiệm cận đứng</span><span><i style="border-color:var(--amber);border-top-style:dashed"></i>Tiệm cận ngang hoặc xiên</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASIO -->
+<section class="sec" id="casio">
+  <div class="wrap">
+    <p class="eyebrow">Phương pháp giải và bấm máy</p>
+    <h2>Sơ đồ tư duy và bí quyết CASIO</h2>
+    <p class="lead">Mỗi bài toán đi qua một sơ đồ ngắn. Máy tính dùng để kiểm tra lại kết quả. Giá trị trên màn hình mô phỏng được tính trực tiếp bằng trình duyệt nên có thể lệch Casio thật ở các chữ số cuối.</p>
+    <div class="ctabs" id="ctabs">
+      <button class="on" data-c="tcn">Tìm tiệm cận ngang</button>
+      <button data-c="tcd">Tìm tiệm cận đứng</button>
+      <button data-c="tcx">Tìm tiệm cận xiên</button>
+    </div>
+    <div class="cas" id="cas"></div>
+
+    <h2 style="margin-top:clamp(40px,6vw,72px);font-size:clamp(22px,3.4vw,32px)">Mẹo nhớ nhanh</h2>
+    <p class="lead">Bấm vào thẻ để lật. Tự trả lời trước khi xem mặt sau.</p>
+    <div class="fcs" id="fcs"></div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="sec" id="quiz">
+  <div class="wrap">
+    <p class="eyebrow">Ôn tập</p>
+    <h2>Ba câu trắc nghiệm cuối bài</h2>
+    <div class="glass quiz" id="qz"></div>
+  </div>
+</section>
+</main>
+<footer><div class="wrap">Bài 3 · Đường tiệm cận của đồ thị hàm số. Đồ thị được vẽ trực tiếp bằng SVG, công thức bằng MathJax.</div></footer>
+
+<script>window.MathJax={startup:{typeset:false},svg:{fontCache:'none'},options:{enableMenu:false}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const NS='http://www.w3.org/2000/svg';
+const mk=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- math helpers ---------- */
+function tex(s,disp){
+  try{ if(window.MathJax&&MathJax.tex2svg) return MathJax.tex2svg(s,{display:!!disp}).outerHTML; }catch(e){}
+  return '<code>'+s.replace(/</g,'&lt;')+'</code>';
+}
+function rich(h){return h.replace(/\$(.+?)\$/g,(_,m)=>tex(m));}
+function typeset(root){$$('.tx,.panel p,.legend span',root).forEach(e=>{if(!e.dataset.src)e.dataset.src=e.innerHTML;e.innerHTML=rich(e.dataset.src);});}
+const rnd=v=>Math.round(v*100)/100;
+function texNum(v){
+  for(let d=1;d<=24;d++){const n=v*d;if(Math.abs(n-Math.round(n))<1e-9){const nn=Math.round(n);if(d===1)return String(nn===0?0:nn);return (nn<0?'-':'')+'\\dfrac{'+Math.abs(nn)+'}{'+d+'}';}}
+  return String(rnd(v));
+}
+function poly(cs){
+  let s='';
+  for(const [c,v] of cs){if(Math.abs(c)<1e-9)continue;const ab=Math.abs(c);const t=(v&&Math.abs(ab-1)<1e-9)?v:String(rnd(ab))+v;s+=(c<0?'-':(s?'+':''))+t;}
+  return s||'0';
+}
+const minus=s=>String(s).replace(/-/g,'−');
+
+/* ---------- plot engine ---------- */
+Plot.n=0;
+function Plot(svg,o){
+  const W=o.w,H=o.h,x0=o.x[0],x1=o.x[1],y0=o.y[0],y1=o.y[1],N=o.n||84,lab=o.lab||1;
+  const X=x=>(x-x0)/(x1-x0)*W, Y=y=>H-(y-y0)/(y1-y0)*H;
+  const id='clp'+(++Plot.n);
+  svg.setAttribute('viewBox','0 0 '+W+' '+H); svg.textContent='';
+  const cp=mk('clipPath',{id:id},mk('defs',{},svg)); mk('rect',{width:W,height:H},cp);
+  mk('rect',{class:'pl-bg',width:W,height:H},svg);
+  let g='';
+  for(let x=Math.ceil(x0);x<=x1;x++)g+='M'+X(x).toFixed(1)+' 0V'+H;
+  for(let y=Math.ceil(y0);y<=y1;y++)g+='M0 '+Y(y).toFixed(1)+'H'+W;
+  mk('path',{class:'pl-grid',d:g},svg);
+  mk('path',{class:'pl-axis',d:'M0 '+Y(0)+'H'+W+'M'+X(0)+' 0V'+H},svg);
+  for(let x=Math.ceil(x0);x<=x1;x++)if(x&&x%lab===0){mk('text',{class:'pl-tk',x:X(x)+3,y:Y(0)+13},svg).textContent=x<0?'−'+(-x):String(x);}
+  for(let y=Math.ceil(y0);y<=y1;y++)if(y&&y%lab===0){mk('text',{class:'pl-tk',x:X(0)+5,y:Y(y)-4},svg).textContent=y<0?'−'+(-y):String(y);}
+  const cg=mk('g',{'clip-path':'url(#'+id+')'},svg);
+  const aV=mk('line',{class:'pl-v'},cg), aS=mk('line',{class:'pl-s'},cg);
+  const pL=mk('path',{class:'pl-c'},cg), pR=mk('path',{class:'pl-c'},cg);
+  const pg=mk('g',{opacity:0},cg), gap=mk('line',{class:'pl-gap'},pg), dot=mk('circle',{r:6,class:'pl-dot'},pg);
+  const lV=mk('text',{class:'pl-lv'},svg), lS=mk('text',{class:'pl-ls','text-anchor':'end'},svg);
+  const fn=(x,s)=>s.p*x+s.c+s.k/(x-s.a);
+  function branch(s,side){
+    const dmin=0.015+Math.abs(s.k)/22, dmax=(side>0?x1-s.a:s.a-x0)+0.6;
+    if(dmax<=dmin*1.5)return '';
+    const pts=[];
+    for(let i=0;i<N;i++){
+      const dd=dmin*Math.pow(dmax/dmin,i/(N-1)), x=s.a+side*dd;
+      let y=fn(x,s); y=Math.max(-60,Math.min(60,y));
+      pts.push(X(x).toFixed(1)+' '+Y(y).toFixed(1));
+    }
+    return 'M'+pts.join('L');
+  }
+  function update(s){
+    const A=(e,a)=>{for(const k in a)e.setAttribute(k,a[k]);};
+    A(aV,{x1:X(s.a),x2:X(s.a),y1:0,y2:H,opacity:s.wV});
+    A(aS,{x1:0,y1:Y(s.p*x0+s.c),x2:W,y2:Y(s.p*x1+s.c),opacity:s.wS});
+    A(pL,{d:branch(s,-1),opacity:s.oL}); A(pR,{d:branch(s,1),opacity:s.oR});
+    A(lV,{x:X(s.a)+8,y:18,opacity:s.wV});
+    const lim=y1-0.7; let xl=x1-0.2, yl=s.p*xl+s.c;
+    if(Math.abs(yl)>lim&&Math.abs(s.p)>1e-6){xl=(Math.sign(yl)*lim-s.c)/s.p;xl=Math.max(x0+1,Math.min(x1-0.2,xl));yl=s.p*xl+s.c;}
+    yl=Math.max(-lim,Math.min(lim,yl));
+    A(lS,{x:X(xl),y:Y(yl)-10,opacity:s.wS});
+  }
+  function setText(v,s){lV.textContent=v||'';lS.textContent=s||'';}
+  function setProbe(x,s,mode){
+    const y=fn(x,s), px=X(x), py=Y(y);
+    if(!isFinite(py)||py<-20||py>H+20||px<-5||px>W+5){pg.setAttribute('opacity',0);return y;}
+    pg.setAttribute('opacity',1);
+    dot.setAttribute('cx',px);dot.setAttribute('cy',py);
+    if(mode==='h'){gap.setAttribute('x1',px);gap.setAttribute('y1',py);gap.setAttribute('x2',X(s.a));gap.setAttribute('y2',py);}
+    else{gap.setAttribute('x1',px);gap.setAttribute('y1',py);gap.setAttribute('x2',px);gap.setAttribute('y2',Y(s.p*x+s.c));}
+    return y;
+  }
+  function hideProbe(){pg.setAttribute('opacity',0);}
+  return {update,setText,setProbe,hideProbe,fn};
+}
+
+/* ---------- MAIN THEORY GRAPH ---------- */
+const main=Plot($('#mainplot'),{w:640,h:480,x:[-6.4,6.4],y:[-4.8,4.8],lab:1});
+const M=[{k:1,side:1},{k:-1,side:-1},{k:-1,side:1},{k:1,side:-1}];
+let tab=0,mode=0,dir=[0,1,1];
+const S={a:1,k:1,p:0,c:0,wV:1,wS:.28,oL:.3,oR:1};
+function scene(){
+  if(tab===0){const m=M[mode];return {a:1,k:m.k,p:0,c:0,wV:1,wS:.28,oL:m.side<0?1:.3,oR:m.side>0?1:.3};}
+  if(tab===1)return {a:1,k:3,p:0,c:2,wV:.3,wS:1,oL:1,oR:1};
+  return {a:1,k:1,p:+$('#slp').value,c:1,wV:.3,wS:1,oL:1,oR:1};
+}
+const render=()=>main.update(S);
+function morph(){
+  const t=scene();
+  if(reduce){Object.assign(S,t);render();return;}
+  gsap.to(S,Object.assign({},t,{duration:1.15,ease:'power3.inOut',overwrite:true,onUpdate:render}));
+}
+function labels(){
+  if(tab===0)main.setText('x = 1','y = 0');
+  else if(tab===1)main.setText('x = 1','y = 2');
+  else{const p=+$('#slp').value;main.setText('x = 1',p<0.05?'y = 1  (a = 0)':'y = '+(rnd(p)===1?'':rnd(p))+'x + 1');}
+}
+function fxs(){
+  const p=+$('#slp').value;
+  $('#fxs').innerHTML=tex('f(x)='+poly([[p,'x'],[1,'']])+'+\\dfrac{1}{x-1}');
+  $('#slpv').textContent=rnd(p);
+  $('#slnote').innerHTML=p<0.05
+    ? rich('Khi $a=0$, tiệm cận xiên trở thành tiệm cận ngang $y=b=1$. Đường màu vàng đã nằm ngang.')
+    : rich('Tiệm cận xiên: $y='+poly([[p,'x'],[1,'']])+'$. Kéo thanh trượt về 0 để thấy nó nằm ngang.');
+}
+const rail=$('#rail'),ind=$('#ind');
+function moveInd(){
+  const b=$('#rail button.on'),r=b.getBoundingClientRect(),pr=rail.getBoundingClientRect();
+  if(reduce)gsap.set(ind,{x:r.left-pr.left,width:r.width});
+  else gsap.to(ind,{x:r.left-pr.left,width:r.width,duration:.5,ease:'power3.out'});
+}
+function goTab(i){
+  if(i===tab)return;
+  const old=$('#pn'+tab),nw=$('#pn'+i); tab=i;
+  $$('#rail button').forEach(b=>{const on=+b.dataset.t===i;b.classList.toggle('on',on);b.setAttribute('aria-selected',on);});
+  old.hidden=true;nw.hidden=false;
+  if(!reduce)gsap.fromTo(nw,{opacity:0,y:14},{opacity:1,y:0,duration:.5,ease:'power2.out',clearProps:'transform'});
+  moveInd();labels();morph();setNav(i);
+}
+rail.addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(b)goTab(+b.dataset.t);});
+$('#th').addEventListener('click',e=>{
+  const b=e.target.closest('.lim[data-mode],.lim[data-dir]');if(!b)return;
+  const grp=b.parentElement;$$('.lim',grp).forEach(x=>x.classList.toggle('on',x===b));
+  if(b.dataset.mode!==undefined){mode=+b.dataset.mode;morph();}
+  else dir[tab]=+b.dataset.dir;
+});
+$('#slp').addEventListener('input',()=>{S.p=+$('#slp').value;render();labels();fxs();});
+
+/* probe animation */
+const readout=$('#readout');
+let fr=0,thVis=true;
+function probe(t){
+  const u=(t%4)/4;let x;
+  if(tab===0){x=S.a+M[mode].side*3*Math.pow(0.012/3,u);}
+  else x=S.a+dir[tab]*(1.6+u*4.1);
+  const y=main.setProbe(x,S,tab===0?'h':'v');
+  if(++fr%3)return;
+  if(tab===0){const big=Math.abs(y)>=1000?y.toExponential(2):y.toFixed(2);
+    readout.textContent='x = '+x.toFixed(3)+'    f(x) = '+big+'\n|x − a| = '+Math.abs(x-S.a).toFixed(3);}
+  else if(tab===1)readout.textContent='x = '+x.toFixed(2)+'    f(x) = '+y.toFixed(4)+'\n|f(x) − m| = '+Math.abs(y-S.c).toFixed(4);
+  else readout.textContent='x = '+x.toFixed(2)+'    f(x) = '+y.toFixed(4)+'\n|f(x) − (ax+b)| = '+Math.abs(y-(S.p*x+S.c)).toFixed(4);
+}
+new IntersectionObserver(en=>{thVis=en[0].isIntersecting;},{rootMargin:'100px'}).observe($('#th'));
+
+/* ---------- HERO CANVAS ---------- */
+const hv=$('#hcv'),hx=hv.getContext('2d');let HW=0,HH=0;const col={};
+function hrs(){
+  const r=hv.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);
+  HW=r.width;HH=r.height;hv.width=HW*d;hv.height=HH*d;hx.setTransform(d,0,0,d,0,0);
+  const cs=getComputedStyle(document.documentElement);
+  ['cyan','mag','amber','grid'].forEach(k=>col[k]=cs.getPropertyValue('--'+k).trim());
+  heroDraw(performance.now()/1000);
+}
+function heroDraw(t){
+  hx.clearRect(0,0,HW,HH);
+  hx.strokeStyle=col.grid;hx.lineWidth=1;hx.beginPath();
+  const ox=(t*8)%48;
+  for(let x=-ox;x<HW;x+=48){hx.moveTo(x,0);hx.lineTo(x,HH);}
+  for(let y=0;y<HH;y+=48){hx.moveTo(0,y);hx.lineTo(HW,y);}
+  hx.stroke();
+  const ax=HW*(HW<700?.78:.74)+Math.sin(t*.4)*26, ay=HH*.52+Math.cos(t*.3)*18;
+  hx.setLineDash([9,8]);hx.lineWidth=1.6;
+  hx.strokeStyle=col.mag;hx.beginPath();hx.moveTo(ax,0);hx.lineTo(ax,HH);hx.stroke();
+  hx.strokeStyle=col.amber;hx.beginPath();hx.moveTo(0,ay);hx.lineTo(HW,ay);hx.stroke();
+  hx.setLineDash([]);hx.strokeStyle=col.cyan;hx.lineWidth=2;
+  for(let i=0;i<4;i++){
+    const k=(2400+i*2200)*(1+.14*Math.sin(t*.5+i*1.3));
+    hx.globalAlpha=.6-i*.12;
+    for(const s of [-1,1]){
+      hx.beginPath();
+      for(let j=0;j<=80;j++){const d=6*Math.pow(Math.max(HW,300)/6,j/80),x=ax+s*d,y=ay-s*k/d;j?hx.lineTo(x,y):hx.moveTo(x,y);}
+      hx.stroke();
+    }
+  }
+  hx.globalAlpha=1;
+}
+let heroVis=true;
+new IntersectionObserver(en=>{heroVis=en[0].isIntersecting;},{}).observe($('#top'));
+addEventListener('resize',()=>{hrs();moveInd();});
+
+/* ---------- NAV ---------- */
+const navL=$$('.nl');
+function setNav(k){navL.forEach(a=>a.classList.toggle('on',+a.dataset.k===k));const a=navL[k];if(a&&a.scrollIntoView&&$('#navl').scrollWidth>$('#navl').clientWidth){const c=$('#navl');c.scrollTo({left:a.offsetLeft-16,behavior:reduce?'auto':'smooth'});}}
+const sm=()=>reduce?'auto':'smooth';
+navL.forEach(a=>a.addEventListener('click',e=>{
+  e.preventDefault();const k=+a.dataset.k;
+  if(k<3)goTab(k);
+  $(a.getAttribute('href')).scrollIntoView({behavior:sm(),block:'start'});
+  setNav(k);
+}));
+$$('.tile').forEach(t=>t.addEventListener('click',()=>{goTab(+t.dataset.go);$('#ly-thuyet').scrollIntoView({behavior:sm(),block:'start'});setNav(+t.dataset.go);}));
+const secMap={'ly-thuyet':()=>tab,dang:()=>3,sandbox:()=>3,casio:()=>4,quiz:()=>4};
+new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting)setNav(secMap[e.target.id]());});},{rootMargin:'-45% 0px -50% 0px'}).observe($('#ly-thuyet'));
+['dang','sandbox','casio','quiz'].forEach(id=>new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting)setNav(secMap[id]());});},{rootMargin:'-45% 0px -50% 0px'}).observe($('#'+id)));
+$('#thm').addEventListener('click',()=>{
+  const r=document.documentElement;
+  const cur=r.dataset.theme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+  r.dataset.theme=cur==='dark'?'light':'dark';hrs();
+});
+
+/* ---------- FORMS ---------- */
+function miniPlots(){
+  const base={wV:1,wS:1,oL:1,oR:1,a:1};
+  const p1=Plot($('#mini1'),{w:480,h:340,x:[-6.8,6.8],y:[-4.8,4.8],lab:2});
+  p1.update(Object.assign({k:3,p:0,c:2},base));p1.setText('x = 1','y = 2');
+  const p2=Plot($('#mini2'),{w:480,h:340,x:[-6.8,6.8],y:[-4.8,4.8],lab:2});
+  p2.update(Object.assign({k:1,p:.5,c:1},base));p2.setText('x = 1','y = x/2 + 1');
+}
+
+/* ---------- SANDBOX ---------- */
+const sbPlot=Plot($('#sbplot'),{w:640,h:480,x:[-8,8],y:[-6,6],lab:2});
+const SB={f:1,keys:{1:['a','b','c','d'],2:['a','b','c','p','q']},v:{1:{a:2,b:1,c:1,d:-1},2:{a:1,b:1,c:-1,p:1,q:-1}}};
+function sbBuild(){
+  $('#sbctl').innerHTML=SB.keys[SB.f].map(k=>'<div class="sl"><label for="sb-'+k+'">'+k+'</label><input id="sb-'+k+'" type="range" min="-4" max="4" step="0.5" value="'+SB.v[SB.f][k]+'"><output for="sb-'+k+'" id="so-'+k+'">'+SB.v[SB.f][k]+'</output></div>').join('');
+  SB.keys[SB.f].forEach(k=>$('#sb-'+k).addEventListener('input',e=>{SB.v[SB.f][k]=+e.target.value;$('#so-'+k).textContent=e.target.value;sbRender();}));
+}
+$('#sbseg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;SB.f=+b.dataset.f;$$('#sbseg button').forEach(x=>x.classList.toggle('on',x===b));sbBuild();sbRender();});
+function sbRender(){
+  const v=SB.v[SB.f];let st,fnTex,html='',ok=true,a0=0,k=0,p=0,c0=0;
+  if(SB.f===1){
+    fnTex='y=\\dfrac{'+poly([[v.a,'x'],[v.b,'']])+'}{'+poly([[v.c,'x'],[v.d,'']])+'}';
+    if(Math.abs(v.c)<1e-9){ok=false;html='<li><span class="warn">Cần $c\\ne0$ để hàm là phân thức bậc nhất. Hãy kéo $c$ khác 0.</span></li>';}
+    else{k=(v.b*v.c-v.a*v.d)/(v.c*v.c);a0=-v.d/v.c;c0=v.a/v.c;
+      if(Math.abs(k)<1e-9){ok=false;html='<li><span class="warn">Vì $ad-bc=0$, hàm rút gọn thành hằng số $y='+texNum(c0)+'$ (khuyết một điểm), không có tiệm cận đứng.</span></li>';}
+      else html='<li><span class="tag v">TCĐ</span>$x=-\\dfrac{d}{c}='+texNum(a0)+'$</li><li><span class="tag h">TCN</span>$y=\\dfrac{a}{c}='+texNum(c0)+'$</li><li><span class="tag x">TCX</span>Không có</li>';}
+  }else{
+    fnTex='y=\\dfrac{'+poly([[v.a,'x^2'],[v.b,'x'],[v.c,'']])+'}{'+poly([[v.p,'x'],[v.q,'']])+'}';
+    if(Math.abs(v.p)<1e-9){ok=false;html='<li><span class="warn">Cần $p\\ne0$ để mẫu bậc nhất. Hãy kéo $p$ khác 0.</span></li>';}
+    else{p=v.a/v.p;c0=(v.b-p*v.q)/v.p;const r=v.c-c0*v.q;k=r/v.p;a0=-v.q/v.p;
+      if(Math.abs(k)<1e-9){ok=false;html='<li><span class="warn">Tử chia hết cho mẫu nên đồ thị là đường thẳng $y='+poly([[p,'x'],[c0,'']])+'$ (khuyết một điểm), không có tiệm cận.</span></li>';}
+      else{
+        html='<li><span class="tag v">TCĐ</span>$x=-\\dfrac{q}{p}='+texNum(a0)+'$</li>';
+        if(Math.abs(p)>1e-9)html+='<li><span class="tag s">TCX</span>$y='+poly([[p,'x'],[c0,'']])+'$</li><li><span class="tag x">TCN</span>Không có</li>';
+        else html+='<li><span class="tag h">TCN</span>$y='+texNum(c0)+'$</li><li><span class="tag x">TCX</span>Không có</li><li><span class="warn">Khi $a=0$, bậc tử không lớn hơn bậc mẫu nên hàm trở về dạng 1.</span></li>';
+      }}
+  }
+  $('#sbfn').innerHTML=tex(fnTex);
+  $('#sbres').innerHTML=rich(html);
+  if(!ok){sbPlot.update({a:0,k:0,p:0,c:0,wV:0,wS:0,oL:0,oR:0});sbPlot.setText('','');return;}
+  sbPlot.update({a:a0,k:k,p:p,c:c0,wV:1,wS:1,oL:1,oR:1});
+  sbPlot.setText('x = '+minus(rnd(a0)),'y = '+minus(Math.abs(p)>1e-9?poly([[p,'x'],[c0,'']]).replace(/\+/g,' + ').replace(/-/g,' - '):rnd(c0)));
+}
+
+/* ---------- CASIO ---------- */
+const FL={
+ tcn:{start:'$f(x)=\\dfrac{P(x)}{Q(x)}$',q:'So sánh bậc tử $m$ và bậc mẫu $n$ (hệ số cao nhất là $a_m$ và $b_n$)',br:[{c:'$m\\lt n$',r:'TCN: $y=0$',k:'good'},{c:'$m=n$',r:'TCN: $y=\\dfrac{a_m}{b_n}$',k:'good'},{c:'$m\\gt n$',r:'Không có TCN',k:'none'}]},
+ tcd:{start:'$f(x)=\\dfrac{P(x)}{Q(x)}$',q:'Giải $Q(x)=0$ được nghiệm $x_0$, rồi thế vào tử',br:[{c:'$P(x_0)\\ne0$',r:'TCĐ: $x=x_0$',k:'good'},{c:'$P(x_0)=0$',r:'Rút gọn nhân tử $(x-x_0)$ rồi xét lại giới hạn',k:'warn'}]},
+ tcx:{start:'$f(x)=\\dfrac{P(x)}{Q(x)}$',q:'Bậc tử có hơn bậc mẫu đúng 1 không?',br:[{c:'Đúng',r:'Chia đa thức: $f(x)=(ax+b)+\\dfrac{r(x)}{Q(x)}$ nên TCX: $y=ax+b$',k:'good'},{c:'Sai',r:'Không có TCX',k:'none'}]}
+};
+const F={tcn:x=>2+3/(x-1),tcd:x=>2+3/(x-1),tcxA:x=>0.5+1/x+1/(x*(x-1)),tcxB:x=>1+1/(x-1)};
+function cf(v){
+  if(Math.abs(v)>=1e10)return v.toExponential(6).replace('e+','×10^');
+  let s=v.toPrecision(10);if(s.includes('.'))s=s.replace(/\.?0+$/,'');return minus(s);
+}
+function lcd(e,x,r){return '<div class="lcd"><div class="e">'+e+'</div><div class="x">'+x+'</div><div class="r">'+r+'</div></div>';}
+const cs={tcn:1,tcd:1,tcx:1};let cTab='tcn';
+function casioView(){
+  const key=cTab,o=cs[key],f=FL[key];
+  const flow='<div class="glass fl"><div class="nd start">'+f.start+'</div><i class="ar"></i><div class="nd q">'+f.q+'</div><div class="brs n'+f.br.length+'">'+f.br.map(b=>'<div class="br"><div class="cond">'+b.c+'</div><div class="nd res '+b.k+'">'+b.r+'</div></div>').join('')+'</div></div>';
+  let calc='';
+  if(key==='tcn'){
+    const x=o*1e9,v=F.tcn(x),sg=o>0?'':'−';
+    calc='<h3>Bấm máy: tìm giới hạn ở vô cực</h3>'+
+      '<div class="keys"><kbd>nhập f(X)</kbd><kbd>CALC</kbd><kbd>X = '+sg+'10^9</kbd><kbd>=</kbd></div>'+
+      '<div class="mini-seg" data-k="tcn"><button data-o="1" class="'+(o>0?'on':'')+'">x → +∞</button><button data-o="-1" class="'+(o<0?'on':'')+'">x → −∞</button></div>'+
+      lcd('(2X+1)÷(X−1)','X = '+sg+'10^9',cf(v))+
+      '<p class="verdict">Kết quả ≈ <b>'+Math.round(v)+'</b>, là một hằng số, nên TCN: $y='+Math.round(v)+'$.</p>';
+  }else if(key==='tcd'){
+    const x=1+o*1e-6,v=F.tcd(x),big=v>0?'rất lớn dương':'rất lớn âm';
+    calc='<h3>Bấm máy: thử sát điểm nghi ngờ</h3>'+
+      '<div class="keys"><kbd>nhập f(X)</kbd><kbd>CALC</kbd><kbd>X = x₀ '+(o>0?'+':'−')+' 0,000001</kbd><kbd>=</kbd></div>'+
+      '<div class="mini-seg" data-k="tcd"><button data-o="1" class="'+(o>0?'on':'')+'">bên phải x₀</button><button data-o="-1" class="'+(o<0?'on':'')+'">bên trái x₀</button></div>'+
+      lcd('(2X+1)÷(X−1)','X = 1 '+(o>0?'+':'−')+' 0.000001',cf(Math.round(v)))+
+      '<p class="verdict">Kết quả '+big+' nên $\\lim f(x)='+(v>0?'+':'-')+'\\infty$ khi $x\\to1^'+(o>0?'+':'-')+'$, suy ra TCĐ: $x=1$.</p>';
+  }else{
+    const x=o*1e9,sg=o>0?'':'−',a=F.tcxA(x),b=F.tcxB(x);
+    calc='<h3>Bấm máy: tìm a rồi tìm b</h3>'+
+      '<div class="keys"><kbd>f(X)÷X</kbd><kbd>CALC</kbd><kbd>X = '+sg+'10^9</kbd><kbd>=</kbd><span>cho ra a</span></div>'+
+      '<div class="keys"><kbd>f(X)−aX</kbd><kbd>CALC</kbd><kbd>X = '+sg+'10^9</kbd><kbd>=</kbd><span>cho ra b</span></div>'+
+      '<div class="mini-seg" data-k="tcx"><button data-o="1" class="'+(o>0?'on':'')+'">x → +∞</button><button data-o="-1" class="'+(o<0?'on':'')+'">x → −∞</button></div>'+
+      lcd('(X²+X)÷(2X−2)÷X','X = '+sg+'10^9',cf(a))+lcd('(X²+X)÷(2X−2) − 0.5X','X = '+sg+'10^9',cf(b))+
+      '<p class="verdict">Làm tròn: $a=0.5$ và $b=1$, nên TCX: $y=0.5x+1$.</p>';
+  }
+  $('#cas').innerHTML=rich(flow)+'<div class="glass calc">'+rich(calc)+'</div>';
+  if(!reduce)gsap.from('#cas > *',{y:16,opacity:.4,duration:.45,stagger:.08,ease:'power2.out',clearProps:'all'});
+}
+$('#ctabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cTab=b.dataset.c;$$('#ctabs button').forEach(x=>x.classList.toggle('on',x===b));casioView();});
+$('#cas').addEventListener('click',e=>{const b=e.target.closest('.mini-seg button');if(!b)return;cs[b.parentElement.dataset.k]=+b.dataset.o;casioView();});
+
+/* ---------- FLASHCARDS ---------- */
+const FC=[
+ {t:'TCĐ',q:'Khi nào có tiệm cận đứng?',b:'Mẫu $Q(x_0)=0$ nhưng tử $P(x_0)\\ne0$. Khi đó $x=x_0$ là TCĐ.'},
+ {t:'TCN',q:'So sánh bậc tử và mẫu cho ra những kết luận nào?',b:'Tử bé hơn mẫu: $y=0$. Bằng nhau: $y=\\dfrac{a_m}{b_n}$. Tử lớn hơn mẫu: không có TCN.'},
+ {t:'TCX',q:'Khi nào có tiệm cận xiên?',b:'Bậc tử hơn bậc mẫu đúng 1. Chia đa thức, phần thương là $y=ax+b$. Nếu $a=0$ thì thành TCN $y=b$.'},
+ {t:'DẠNG 1',q:'$y=\\dfrac{ax+b}{cx+d}$ có những tiệm cận nào?',b:'Đứng: $x=-\\dfrac{d}{c}$. Ngang: $y=\\dfrac{a}{c}$. Không có xiên.'},
+ {t:'DẠNG 2',q:'$y=\\dfrac{ax^2+bx+c}{px+q}$ có những tiệm cận nào?',b:'Đứng: $x=-\\dfrac{q}{p}$. Xiên: $y=Ax+B$ là thương. Không có ngang.'},
+ {t:'CASIO',q:'Nhập giá trị nào cho CALC?',b:'Vô cực: $X=\\pm10^9$. Sát điểm $x_0$: $X=x_0\\pm10^{-6}$. Kết quả cực lớn hoặc cực bé nghĩa là có TCĐ.'}
+];
+function fcBuild(){
+  $('#fcs').innerHTML=FC.map((c,i)=>'<button class="fc" aria-pressed="false" data-i="'+i+'"><span class="fc-in"><span class="fc-f"><small>'+c.t+'</small><strong>'+rich(c.q)+'</strong><span class="fc-h">Bấm để lật</span></span><span class="fc-b"><small>ĐÁP ÁN</small><span>'+rich(c.b)+'</span></span></span></button>').join('');
+}
+$('#fcs').addEventListener('click',e=>{const b=e.target.closest('.fc');if(!b)return;const on=b.classList.toggle('flip');b.setAttribute('aria-pressed',on);});
+
+/* ---------- QUIZ ---------- */
+const Q=[
+ {q:'Đồ thị hàm số $y=\\dfrac{2x+1}{x-1}$ có tiệm cận đứng và tiệm cận ngang lần lượt là:',o:['$x=-1;\\ y=2$','$x=1;\\ y=2$','$x=1;\\ y=\\dfrac{1}{2}$','$x=2;\\ y=1$'],a:1,e:'Dạng 1: TCĐ $x=-\\dfrac{d}{c}=1$ và TCN $y=\\dfrac{a}{c}=2$. Với Casio, CALC $X=10^9$ cho kết quả gần 2.'},
+ {q:'Tiệm cận xiên của đồ thị $y=\\dfrac{x^2+x-1}{x-1}$ là:',o:['$y=x+2$','$y=x-2$','$y=x+1$','Không có tiệm cận xiên'],a:0,e:'Bậc tử hơn bậc mẫu đúng 1. Ta có $x^2+x-1=(x-1)(x+2)+1$ nên $f(x)=x+2+\\dfrac{1}{x-1}$ và TCX là $y=x+2$.'},
+ {q:'Đồ thị $y=\\dfrac{3x^2+1}{x^2-4}$ có tất cả bao nhiêu đường tiệm cận (đứng và ngang)?',o:['1','2','3','4'],a:2,e:'Mẫu $x^2-4=0$ cho $x=\\pm2$, tử khác 0 nên có 2 TCĐ. Bậc tử bằng bậc mẫu nên TCN $y=3$. Tổng cộng 3 đường.'}
+];
+let qi=0,qs=0;
+function quiz(){
+  const el=$('#qz');
+  if(qi>=Q.length){
+    const msg=qs===3?'Xuất sắc, bạn nắm chắc bài học.':qs===2?'Khá tốt, xem lại thẻ mẹo nhớ cho câu còn thiếu.':'Hãy lật lại các thẻ mẹo nhớ rồi làm lại.';
+    el.innerHTML='<div class="qdots">'+Q.map(()=>'<i class="d"></i>').join('')+'</div><div class="score">'+qs+'/'+Q.length+'</div><p style="margin:6px 0 16px">'+msg+'</p><button class="btn" id="qre">Làm lại</button>';
+    $('#qre').onclick=()=>{qi=0;qs=0;quiz();};return;
+  }
+  const c=Q[qi];
+  el.innerHTML='<div class="qdots">'+Q.map((_,i)=>'<i class="'+(i<=qi?'d':'')+'"></i>').join('')+'</div><p class="eyebrow">Câu '+(qi+1)+' / '+Q.length+'</p><div class="qq">'+rich(c.q)+'</div><div class="opts">'+c.o.map((o,i)=>'<button class="opt" data-i="'+i+'"><b>'+'ABCD'[i]+'</b><span>'+rich(o)+'</span></button>').join('')+'</div><div id="qx"></div>';
+  $$('.opt',el).forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.dataset.i;$$('.opt',el).forEach(x=>x.disabled=true);
+    $$('.opt',el)[c.a].classList.add('ok');if(i!==c.a)b.classList.add('bad');else qs++;
+    $('#qx').innerHTML='<div class="qe"><b>'+(i===c.a?'Chính xác. ':'Chưa đúng. ')+'</b>'+rich(c.e)+'</div><div class="qact"><span class="eyebrow" style="margin:0">Điểm: '+qs+'</span><button class="btn" id="qn">'+(qi===Q.length-1?'Xem kết quả':'Câu tiếp theo')+'</button></div>';
+    $('#qn').onclick=()=>{qi++;quiz();};
+  }));
+}
+
+/* ---------- INIT ---------- */
+function init(){
+  try{document.head.appendChild(MathJax.svgStylesheet());}catch(e){}
+  typeset(document);
+  render();labels();fxs();
+  hrs();miniPlots();sbBuild();sbRender();casioView();fcBuild();quiz();
+  requestAnimationFrame(()=>{moveInd();});
+  setNav(0);
+  gsap.registerPlugin(ScrollTrigger);
+  const t0=performance.now();
+  gsap.ticker.add(()=>{
+    const t=(performance.now()-t0)/1000;
+    if(thVis&&!reduce)probe(t);
+    if(heroVis&&!reduce)heroDraw(t);
+  });
+  if(reduce){probe(1.5);}
+  if(!reduce){
+    gsap.to('#prog',{scaleX:1,ease:'none',scrollTrigger:{trigger:document.body,start:'top top',end:'bottom bottom',scrub:.2}});
+    $$('.glass,.sec .lead,.sec h2').forEach(el=>gsap.from(el,{y:26,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 94%',once:true}}));
+  }
+  document.fonts&&document.fonts.ready.then(moveInd);
+}
+const rdy=(window.MathJax&&MathJax.startup&&MathJax.startup.promise)||Promise.resolve();
+Promise.race([rdy,new Promise(r=>setTimeout(r,4000))]).catch(()=>{}).then(init);
+})();
+</script>
+
+</body></html>

@@ -33,7 +33,7 @@
   --glow:rgba(0,120,160,.3); --onacc:#ffffff; color-scheme:light;
 }
 *{box-sizing:border-box}
-body{background:radial-gradient(var(--grid) 1px,transparent 1.2px) 0 0/26px 26px,var(--bg);color:var(--fg);font:400 16px/1.65 var(--ff-b);overflow-x:clip}
+body{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:radial-gradient(var(--grid) 1px,transparent 1.2px) 0 0/26px 26px,var(--bg);color:var(--fg);font:400 16px/1.65 var(--ff-b);overflow-x:clip}
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 .wrap{max-width:1200px;margin-inline:auto;padding-inline:16px}
@@ -42,7 +42,8 @@ h1,h2,h3{font-family:var(--ff-d);margin:0;text-wrap:balance;line-height:1.12}
 p{margin:0}
 .eyebrow{font:600 12px var(--ff-m);letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
 .lead{color:var(--mut);max-width:62ch}
-.sec{padding-block:clamp(44px,7vw,88px);scroll-margin-top:60px}
+.sec{height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-block:16px;scroll-margin-top:0}
+.workspace{flex:1;min-height:0;overflow:hidden}
 .sec h2{font-size:clamp(26px,4.2vw,42px);font-weight:700;margin-bottom:12px}
 .glass{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:4px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .glass::before,.glass::after{content:'';position:absolute;width:14px;height:14px;pointer-events:none}
@@ -50,15 +51,15 @@ p{margin:0}
 .glass::after{right:-1px;bottom:-1px;border-bottom:2px solid var(--cyan);border-right:2px solid var(--cyan)}
 
 /* hero */
-.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero{position:relative;flex:none;overflow:hidden;border-bottom:1px solid var(--line)}
 #hcv{position:absolute;inset:0;width:100%;height:100%;display:block}
-.hero-in{position:relative;padding-block:clamp(40px,8vw,92px) clamp(28px,5vw,52px)}
-.hero h1{font-size:clamp(30px,6.4vw,68px);font-weight:700;text-transform:uppercase;letter-spacing:.01em;max-width:15ch}
-.hero h1 small{display:block;font:600 clamp(13px,2vw,17px) var(--ff-m);letter-spacing:.22em;color:var(--amber);margin-bottom:14px}
+.hero-in{position:relative;padding-block:clamp(12px,2vw,22px)}
+.hero h1{font-size:clamp(24px,4vw,44px);font-weight:700;text-transform:uppercase;letter-spacing:.01em;max-width:none}
+.hero h1 small{display:block;font:600 clamp(10px,1.2vw,13px) var(--ff-m);letter-spacing:.18em;color:var(--amber);margin-bottom:5px}
 .hero h1 em{font-style:normal;color:var(--cyan);text-shadow:0 0 28px var(--glow)}
-.hero .lead{margin-top:18px;font-size:clamp(15px,2vw,18px);max-width:56ch}
-.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:clamp(26px,4vw,44px);max-width:880px}
-.tile{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;background:var(--panel);border:1px solid var(--line);border-radius:4px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:border-color .2s,transform .2s}
+.hero .lead{margin-top:8px;font-size:clamp(12px,1.3vw,15px);max-width:70ch}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px;max-width:880px}
+.tile{display:flex;align-items:center;gap:10px;text-align:left;padding:7px 10px;background:var(--panel);border:1px solid var(--line);border-radius:4px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:border-color .2s,transform .2s}
 .tile:hover{border-color:var(--cyan);transform:translateY(-2px)}
 .tile svg{flex:none;width:64px;height:48px}
 .tile b{display:block;font:600 11px var(--ff-m);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
@@ -68,16 +69,15 @@ p{margin:0}
 .ic-s{fill:none;stroke:var(--amber);stroke-width:1.8;stroke-dasharray:4 3}
 
 /* nav */
-.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--navbg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav{position:relative;flex:none;z-index:20;background:var(--navbg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
 .nav .wrap{display:flex;align-items:center;gap:8px}
 .nav-l{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
 .nav-l::-webkit-scrollbar{display:none}
-.nl{flex:none;white-space:nowrap;padding:14px 12px;font-size:14px;font-weight:500;color:var(--mut);background:none;border:0;border-bottom:2px solid transparent;text-decoration:none}
+.nl{flex:none;white-space:nowrap;padding:9px 10px;font-size:13px;font-weight:500;color:var(--mut);background:none;border:0;border-bottom:2px solid transparent;text-decoration:none}
 .nl b{font:600 12px var(--ff-m);color:var(--cyan);margin-right:7px}
 .nl:hover,.nl.on{color:var(--fg);border-bottom-color:var(--cyan)}
 .thm{flex:none;width:36px;height:36px;border:1px solid var(--line2);border-radius:4px;background:none;display:grid;place-items:center}
 .thm svg{width:18px;height:18px;fill:none;stroke:var(--fg);stroke-width:2}
-.nav-prog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--cyan);transform:scaleX(0);transform-origin:0 50%;box-shadow:0 0 10px var(--cyan)}
 
 /* theory */
 .rail{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:26px;border:1px solid var(--line);background:var(--panel);border-radius:4px}
@@ -184,9 +184,25 @@ kbd{font:600 12px var(--ff-m);border:1px solid var(--line2);border-bottom-width:
 .mini-seg{display:flex;gap:6px;flex-wrap:wrap}
 .mini-seg button{padding:6px 12px;border:1px solid var(--line2);border-radius:4px;background:none;font:600 13px var(--ff-m)}
 .mini-seg button.on{background:var(--amber);border-color:var(--amber);color:var(--onacc)}
+.calc-practice{display:grid;gap:9px;padding-top:12px;border-top:1px solid var(--line)}
+.calc-practice h4{font:600 15px var(--ff-d);margin:0}
+.calc-practice p{color:var(--mut);font-size:12px;line-height:1.45}
+.calc-entry{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:8px}
+.calc-entry label{display:grid;gap:4px;color:var(--mut);font:600 11px var(--ff-m);letter-spacing:.06em}
+.calc-entry input{width:100%;min-width:0;padding:8px 9px;border:1px solid var(--line2);border-radius:4px;background:var(--plbg);color:var(--fg);font:500 14px var(--ff-m)}
+.calc-entry input:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
+.calc-pad{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.calc-key,.calc-equals{min-height:34px;border:1px solid var(--line2);border-radius:4px;background:var(--panel2);color:var(--fg);font:600 13px var(--ff-m)}
+.calc-key:hover,.calc-equals:hover{border-color:var(--cyan);background:var(--panel)}
+.calc-key.op{color:var(--amber)}
+.calc-key.utility{color:var(--mut)}
+.calc-equals{border-color:var(--cyan);background:var(--cyan);color:var(--onacc);font-size:15px}
+.calc-display{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:46px;padding:8px 10px;border:1px solid #1c3a2b;border-radius:4px;background:var(--lcd);color:var(--lcdfg);font:500 12px/1.4 var(--ff-m)}
+.calc-display output{font-size:19px;font-weight:600;text-align:right;overflow-wrap:anywhere}
+.calc-display.error{border-color:var(--bad);color:var(--bad)}
 .fcs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:20px}
-.fc{perspective:900px;min-height:190px;background:none;border:0;padding:0;text-align:left}
-.fc-in{position:relative;width:100%;height:100%;min-height:190px;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.fc{display:block;width:100%;height:190px;perspective:900px;min-height:190px;background:none;border:0;padding:0;text-align:left;appearance:none;-webkit-appearance:none}
+.fc-in{display:block;position:relative;width:100%;height:100%;min-height:190px;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
 .fc.flip .fc-in{transform:rotateY(180deg)}
 .fc-f,.fc-b{position:absolute;inset:0;padding:16px;border:1px solid var(--line2);border-radius:4px;background:var(--panel2);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;gap:8px;overflow:auto}
 .fc-b{transform:rotateY(180deg);border-color:var(--cyan)}
@@ -211,7 +227,7 @@ kbd{font:600 12px var(--ff-m);border:1px solid var(--line2);border-bottom-width:
 .qact{margin-top:14px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .btn{padding:10px 20px;border:0;border-radius:4px;background:var(--cyan);color:var(--onacc);font:700 14px var(--ff-d);letter-spacing:.04em}
 .score{font:700 clamp(40px,8vw,64px) var(--ff-d);color:var(--cyan)}
-footer{padding-block:32px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
+footer{display:none}
 
 @media (max-width:960px){
   .th,.sb,.cas{grid-template-columns:minmax(0,1fr)}
@@ -219,8 +235,19 @@ footer{padding-block:32px;border-top:1px solid var(--line);color:var(--mut);font
   .fcs{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:720px){
-  .tiles{grid-template-columns:1fr}
-  .cmp{grid-template-columns:1fr}
+  .tiles{display:none}
+  .hero-in{padding-block:10px}
+  .hero h1{font-size:clamp(21px,5.8vw,30px);max-width:none}
+  .hero h1 small{margin-bottom:3px}
+  .hero .lead{font-size:12px;margin-top:5px}
+  .nl{padding:8px 9px;font-size:12px}
+  .cmp{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .fcard{padding:10px;gap:8px}
+  .fcard h3{font-size:18px}
+  .fcard .fn{font-size:16px}
+  .fcard .plot{max-height:150px}
+  .row{padding:7px}
+  .row .tx,.row .no{font-size:14px}
   .rail button{padding:10px}
   .rail button span{font-size:13px}
   .rail button em{display:none}
@@ -228,6 +255,17 @@ footer{padding-block:32px;border-top:1px solid var(--line);color:var(--mut);font
 }
 @media (max-width:620px){
   .fcs{grid-template-columns:1fr}
+  .sec{padding-block:12px}
+  .wrap{padding-inline:12px}
+  .sec h2{font-size:clamp(22px,6vw,28px)}
+  .lead{font-size:13px}
+  .ctabs{gap:5px;margin-top:14px}
+  .ctabs button{padding:7px 9px;font-size:12px}
+  .calc{padding:12px}
+  .calc-entry{grid-template-columns:minmax(0,1fr) 92px}
+  .fcs{gap:8px;margin-top:12px}
+  .fc,.fc-in{height:150px;min-height:150px}
+  .fc-f,.fc-b{padding:12px}
   .brs{--n:1!important;padding-top:6px;gap:16px}
   .brs::before{display:none}
   .br::before{display:none}
@@ -242,7 +280,7 @@ footer{padding-block:32px;border-top:1px solid var(--line);color:var(--mut);font
   <canvas id="hcv" aria-hidden="true"></canvas>
   <div class="wrap hero-in">
     <h1><small>BÀI 3</small>Đường <em>tiệm cận</em> của đồ thị hàm số</h1>
-    <p class="lead">Ba loại đường tiệm cận, hai dạng hàm số thường gặp và một quy trình bấm máy Casio, gói trong một trang. Mọi đồ thị bên dưới đều kéo, trượt và biến hình được.</p>
+    <p class="lead">Chọn một mục để học, thử đồ thị, bấm máy và ôn tập ngay trên cùng một màn hình.</p>
     <div class="tiles">
       <button class="tile" data-go="0"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="ic-v" d="M32 2V46"/><path class="ic-c" d="M35 4C35 28 42 38 62 40M29 44C29 20 22 10 2 8"/></svg><div><b>Tiệm cận đứng</b><span class="tx">$x=a$</span></div></button>
       <button class="tile" data-go="1"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="ic-s" d="M2 18H62"/><path class="ic-c" d="M4 44C18 40 30 28 38 22C46 17 54 17 62 17.5"/></svg><div><b>Tiệm cận ngang</b><span class="tx">$y=m$</span></div></button>
@@ -258,14 +296,16 @@ footer{padding-block:32px;border-top:1px solid var(--line);color:var(--mut);font
       <a class="nl" href="#ly-thuyet" data-k="1"><b>2</b>Tiệm cận ngang</a>
       <a class="nl" href="#ly-thuyet" data-k="2"><b>3</b>Tiệm cận xiên</a>
       <a class="nl" href="#dang" data-k="3"><b>4</b>Dạng đặc biệt</a>
-      <a class="nl" href="#casio" data-k="4"><b>5</b>Bí quyết CASIO &amp; Mẹo nhớ nhanh</a>
+      <a class="nl" href="#sandbox" data-k="4"><b>5</b>Thử nghiệm</a>
+      <a class="nl" href="#casio" data-k="5"><b>6</b>CASIO</a>
+      <a class="nl" href="#memory" data-k="6"><b>7</b>Mẹo nhớ</a>
+      <a class="nl" href="#quiz" data-k="7"><b>8</b>Ôn tập</a>
     </div>
     <button class="thm" id="thm" aria-label="Đổi giao diện sáng hoặc tối"><svg viewBox="0 0 24 24"><path d="M21 13.5A8.5 8.5 0 1 1 10.5 3a7 7 0 0 0 10.5 10.5z"/></svg></button>
   </div>
-  <div class="nav-prog" id="prog"></div>
 </nav>
 
-<main>
+<main class="workspace">
 <!-- LÝ THUYẾT -->
 <section class="sec" id="ly-thuyet">
   <div class="wrap">
@@ -329,7 +369,7 @@ footer{padding-block:32px;border-top:1px solid var(--line);color:var(--mut);font
 </section>
 
 <!-- HAI DẠNG -->
-<section class="sec" id="dang">
+<section class="sec" id="dang" hidden>
   <div class="wrap">
     <p class="eyebrow">Dạng đặc biệt</p>
     <h2>Hai dạng hàm số thường gặp</h2>
@@ -364,7 +404,7 @@ footer{padding-block:32px;border-top:1px solid var(--line);color:var(--mut);font
 </section>
 
 <!-- SANDBOX -->
-<section class="sec" id="sandbox">
+<section class="sec" id="sandbox" hidden>
   <div class="wrap">
     <p class="eyebrow">Mô phỏng thử nghiệm</p>
     <h2>Tự chỉnh hệ số, đồ thị tự cập nhật</h2>
@@ -385,7 +425,7 @@ footer{padding-block:32px;border-top:1px solid var(--line);color:var(--mut);font
 </section>
 
 <!-- CASIO -->
-<section class="sec" id="casio">
+<section class="sec" id="casio" hidden>
   <div class="wrap">
     <p class="eyebrow">Phương pháp giải và bấm máy</p>
     <h2>Sơ đồ tư duy và bí quyết CASIO</h2>
@@ -397,14 +437,21 @@ footer{padding-block:32px;border-top:1px solid var(--line);color:var(--mut);font
     </div>
     <div class="cas" id="cas"></div>
 
-    <h2 style="margin-top:clamp(40px,6vw,72px);font-size:clamp(22px,3.4vw,32px)">Mẹo nhớ nhanh</h2>
+  </div>
+</section>
+
+<!-- MẸO NHỚ -->
+<section class="sec" id="memory" hidden>
+  <div class="wrap">
+    <p class="eyebrow">Ghi nhớ nhanh</p>
+    <h2>Thẻ ghi nhớ tiệm cận</h2>
     <p class="lead">Bấm vào thẻ để lật. Tự trả lời trước khi xem mặt sau.</p>
     <div class="fcs" id="fcs"></div>
   </div>
 </section>
 
 <!-- QUIZ -->
-<section class="sec" id="quiz">
+<section class="sec" id="quiz" hidden>
   <div class="wrap">
     <p class="eyebrow">Ôn tập</p>
     <h2>Ba câu trắc nghiệm cuối bài</h2>
@@ -417,7 +464,6 @@ footer{padding-block:32px;border-top:1px solid var(--line);color:var(--mut);font
 <script>window.MathJax={startup:{typeset:false},svg:{fontCache:'none'},options:{enableMenu:false}};</script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 (function(){
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -609,17 +655,19 @@ addEventListener('resize',()=>{hrs();moveInd();});
 /* ---------- NAV ---------- */
 const navL=$$('.nl');
 function setNav(k){navL.forEach(a=>a.classList.toggle('on',+a.dataset.k===k));const a=navL[k];if(a&&a.scrollIntoView&&$('#navl').scrollWidth>$('#navl').clientWidth){const c=$('#navl');c.scrollTo({left:a.offsetLeft-16,behavior:reduce?'auto':'smooth'});}}
-const sm=()=>reduce?'auto':'smooth';
+const views=['ly-thuyet','ly-thuyet','ly-thuyet','dang','sandbox','casio','memory','quiz'];
+function showView(id,k){
+  $$('.workspace > .sec').forEach(section=>{section.hidden=section.id!==id;});
+  if(k<3)goTab(k);
+  setNav(k);
+  const active=$('#'+id);
+  active.scrollTop=0;
+}
 navL.forEach(a=>a.addEventListener('click',e=>{
   e.preventDefault();const k=+a.dataset.k;
-  if(k<3)goTab(k);
-  $(a.getAttribute('href')).scrollIntoView({behavior:sm(),block:'start'});
-  setNav(k);
+  showView(views[k],k);
 }));
-$$('.tile').forEach(t=>t.addEventListener('click',()=>{goTab(+t.dataset.go);$('#ly-thuyet').scrollIntoView({behavior:sm(),block:'start'});setNav(+t.dataset.go);}));
-const secMap={'ly-thuyet':()=>tab,dang:()=>3,sandbox:()=>3,casio:()=>4,quiz:()=>4};
-new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting)setNav(secMap[e.target.id]());});},{rootMargin:'-45% 0px -50% 0px'}).observe($('#ly-thuyet'));
-['dang','sandbox','casio','quiz'].forEach(id=>new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting)setNav(secMap[id]());});},{rootMargin:'-45% 0px -50% 0px'}).observe($('#'+id)));
+$$('.tile').forEach(t=>t.addEventListener('click',()=>showView('ly-thuyet',+t.dataset.go)));
 $('#thm').addEventListener('click',()=>{
   const r=document.documentElement;
   const cur=r.dataset.theme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
@@ -681,6 +729,91 @@ function cf(v){
   let s=v.toPrecision(10);if(s.includes('.'))s=s.replace(/\.?0+$/,'');return minus(s);
 }
 function lcd(e,x,r){return '<div class="lcd"><div class="e">'+e+'</div><div class="x">'+x+'</div><div class="r">'+r+'</div></div>';}
+const practiceValues={
+  tcn:{expression:'(2X+1)/(X-1)',x:'1000000000'},
+  tcd:{expression:'(2X+1)/(X-1)',x:'1.000001'},
+  tcx:{expression:'(X^2+X)/(2X-2)-0.5X',x:'1000000000'}
+};
+function evaluatePractice(expression,xInput){
+  const source=expression.trim().replace(/[−–]/g,'-').replace(/×/g,'*').replace(/÷/g,'/').replace(/,/g,'.');
+  if(!source)throw new SyntaxError('Nhập biểu thức cần tính.');
+  if(source.length>120)throw new SyntaxError('Biểu thức quá dài (tối đa 120 ký tự).');
+  const xText=String(xInput).trim().replace(',','.');
+  const x=Number(xText);
+  if(!xText||!Number.isFinite(x))throw new SyntaxError('Giá trị X phải là một số hữu hạn.');
+  const pattern=/(?:(?:\d+(?:\.\d*)?)|(?:\.\d+))(?:[eE][+-]?\d+)?|[xX]|[()+\-*/^]/y;
+  const raw=[];
+  for(let i=0;i<source.length;){
+    if(/\s/.test(source[i])){i++;continue;}
+    pattern.lastIndex=i;
+    const match=pattern.exec(source);
+    if(!match)throw new SyntaxError('Ký tự không hợp lệ trong biểu thức.');
+    i=pattern.lastIndex;
+    const token=match[0];
+    if(/^(?:\d|\.)/.test(token))raw.push({type:'number',value:Number(token)});
+    else if(/^[xX]$/.test(token))raw.push({type:'x'});
+    else if(token==='(')raw.push({type:'open'});
+    else if(token===')')raw.push({type:'close'});
+    else raw.push({type:'op',value:token});
+  }
+  const tokens=[];
+  raw.forEach((token,i)=>{
+    const previous=raw[i-1];
+    if(previous&&['number','x','close'].includes(previous.type)&&['number','x','open'].includes(token.type))
+      tokens.push({type:'op',value:'*'});
+    tokens.push(token);
+  });
+  if(tokens.length>100)throw new SyntaxError('Biểu thức có quá nhiều phép tính.');
+  let index=0;
+  const peek=()=>tokens[index];
+  function primary(){
+    const token=tokens[index++];
+    if(!token)throw new SyntaxError('Thiếu số hoặc X trong biểu thức.');
+    if(token.type==='number')return token.value;
+    if(token.type==='x')return x;
+    if(token.type==='open'){
+      const value=sum();
+      if(!peek()||peek().type!=='close')throw new SyntaxError('Thiếu dấu đóng ngoặc ).');
+      index++;
+      return value;
+    }
+    throw new SyntaxError('Kiểm tra lại vị trí số, X và dấu ngoặc.');
+  }
+  function power(){
+    const value=primary();
+    if(peek()&&peek().type==='op'&&peek().value==='^'){
+      index++;
+      return Math.pow(value,unary());
+    }
+    return value;
+  }
+  function unary(){
+    if(peek()&&peek().type==='op'&&(peek().value==='+'||peek().value==='-')){
+      const sign=tokens[index++].value;
+      return (sign==='-'?-1:1)*unary();
+    }
+    return power();
+  }
+  function product(){
+    let value=unary();
+    while(peek()&&peek().type==='op'&&(peek().value==='*'||peek().value==='/')){
+      const op=tokens[index++].value,next=unary();
+      value=op==='*'?value*next:value/next;
+    }
+    return value;
+  }
+  function sum(){
+    let value=product();
+    while(peek()&&peek().type==='op'&&(peek().value==='+'||peek().value==='-')){
+      const op=tokens[index++].value,next=product();
+      value=op==='+'?value+next:value-next;
+    }
+    return value;
+  }
+  const result=sum();
+  if(index!==tokens.length)throw new SyntaxError('Kiểm tra lại phép tính và dấu ngoặc.');
+  return result;
+}
 const cs={tcn:1,tcd:1,tcx:1};let cTab='tcn';
 function casioView(){
   const key=cTab,o=cs[key],f=FL[key];
@@ -709,11 +842,76 @@ function casioView(){
       lcd('(X²+X)÷(2X−2)÷X','X = '+sg+'10^9',cf(a))+lcd('(X²+X)÷(2X−2) − 0.5X','X = '+sg+'10^9',cf(b))+
       '<p class="verdict">Làm tròn: $a=0.5$ và $b=1$, nên TCX: $y=0.5x+1$.</p>';
   }
+  const keys=['7','8','9','÷','AC','4','5','6','×','⌫','1','2','3','(',')','0','.','X','+','-','^'];
+  const practice=practiceValues[key];
+  const keypad='<div class="calc-pad" aria-label="Bàn phím máy tính">'+keys.map(k=>{
+    const special=k==='AC'?' utility':k==='⌫'?' utility':['÷','×','+','-','^','(',')'].includes(k)?' op':'';
+    const action=k==='AC'?'clear':k==='⌫'?'backspace':k;
+    const label=k==='AC'?'Xóa toàn bộ':k==='⌫'?'Xóa ký tự cuối':k;
+    return '<button type="button" class="calc-key'+special+'" data-calc-key="'+action+'" aria-label="'+label+'">'+k+'</button>';
+  }).join('')+'</div>';
+  const practiceUI='<div class="calc-practice"><h4>Thử phép tính ngay trên trang</h4>'+
+    '<p>Nhập biểu thức theo X rồi bấm =. Hỗ trợ cộng, trừ, nhân, chia, lũy thừa, ngoặc và phép nhân ẩn như 2X.</p>'+
+    '<div class="calc-entry"><label for="practiceExpr">BIỂU THỨC f(X)<input id="practiceExpr" type="text" value="'+practice.expression+'" autocomplete="off" spellcheck="false" aria-label="Biểu thức theo X"></label>'+
+    '<label for="practiceX">GIÁ TRỊ X<input id="practiceX" type="text" inputmode="decimal" value="'+practice.x+'" aria-label="Giá trị X để thay vào biểu thức"></label></div>'+
+    keypad+'<button type="button" class="calc-equals" data-calc-key="equals">= Tính</button>'+
+    '<div class="calc-display" id="practiceDisplay" role="status" aria-live="polite"><span>Kết quả</span><output id="practiceResult">Bấm = để tính</output></div></div>';
   $('#cas').innerHTML=rich(flow)+'<div class="glass calc">'+rich(calc)+'</div>';
+  $('#cas .calc').insertAdjacentHTML('beforeend',practiceUI);
   if(!reduce)gsap.from('#cas > *',{y:16,opacity:.4,duration:.45,stagger:.08,ease:'power2.out',clearProps:'all'});
 }
 $('#ctabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cTab=b.dataset.c;$$('#ctabs button').forEach(x=>x.classList.toggle('on',x===b));casioView();});
-$('#cas').addEventListener('click',e=>{const b=e.target.closest('.mini-seg button');if(!b)return;cs[b.parentElement.dataset.k]=+b.dataset.o;casioView();});
+function calculatePractice(){
+  const display=$('#practiceDisplay'),result=$('#practiceResult');
+  try{
+    const value=evaluatePractice($('#practiceExpr').value,$('#practiceX').value);
+    display.classList.remove('error');
+    result.textContent=Number.isFinite(value)?cf(value):'Không hữu hạn';
+    if(!Number.isFinite(value))display.classList.add('error');
+  }catch(error){
+    if(!(error instanceof SyntaxError))throw error;
+    display.classList.add('error');
+    result.textContent=error.message;
+  }
+}
+$('#cas').addEventListener('input',e=>{
+  if(e.target.id==='practiceExpr')practiceValues[cTab].expression=e.target.value;
+  if(e.target.id==='practiceX')practiceValues[cTab].x=e.target.value;
+  if(e.target.id==='practiceExpr'||e.target.id==='practiceX'){
+    $('#practiceDisplay').classList.remove('error');
+    $('#practiceResult').textContent='Bấm = để tính';
+  }
+});
+$('#cas').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&(e.target.id==='practiceExpr'||e.target.id==='practiceX')){
+    e.preventDefault();
+    calculatePractice();
+  }
+});
+$('#cas').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.matches('.mini-seg button')){
+    const key=b.parentElement.dataset.k;
+    cs[key]=+b.dataset.o;
+    practiceValues[key].x=key==='tcd'?(cs[key]>0?'1.000001':'0.999999'):String(cs[key]*1e9);
+    casioView();return;
+  }
+  if(!b.matches('[data-calc-key]'))return;
+  const input=$('#practiceExpr'),key=b.dataset.calcKey;
+  if(key==='equals'){calculatePractice();return;}
+  if(key==='clear')input.value='';
+  else if(key==='backspace'){
+    const start=input.selectionStart??input.value.length,end=input.selectionEnd??start;
+    input.setRangeText('',start===end?Math.max(0,start-1):start,end,'end');
+  }else{
+    const start=input.selectionStart??input.value.length,end=input.selectionEnd??start;
+    input.setRangeText(key,start,end,'end');
+  }
+  practiceValues[cTab].expression=input.value;
+  $('#practiceDisplay').classList.remove('error');
+  $('#practiceResult').textContent='Bấm = để tính';
+  input.focus();
+});
 
 /* ---------- FLASHCARDS ---------- */
 const FC=[
@@ -761,7 +959,6 @@ function init(){
   hrs();miniPlots();sbBuild();sbRender();casioView();fcBuild();quiz();
   requestAnimationFrame(()=>{moveInd();});
   setNav(0);
-  gsap.registerPlugin(ScrollTrigger);
   const t0=performance.now();
   gsap.ticker.add(()=>{
     const t=(performance.now()-t0)/1000;
@@ -769,10 +966,7 @@ function init(){
     if(heroVis&&!reduce)heroDraw(t);
   });
   if(reduce){probe(1.5);}
-  if(!reduce){
-    gsap.to('#prog',{scaleX:1,ease:'none',scrollTrigger:{trigger:document.body,start:'top top',end:'bottom bottom',scrub:.2}});
-    $$('.glass,.sec .lead,.sec h2').forEach(el=>gsap.from(el,{y:26,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 94%',once:true}}));
-  }
+  if(!reduce)gsap.fromTo('.workspace > .sec:not([hidden]) .wrap',{opacity:.75,y:8},{opacity:1,y:0,duration:.35,ease:'power2.out',clearProps:'transform'});
   document.fonts&&document.fonts.ready.then(moveInd);
 }
 const rdy=(window.MathJax&&MathJax.startup&&MathJax.startup.promise)||Promise.resolve();

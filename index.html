@@ -43,7 +43,7 @@ p{margin:0}
 .eyebrow{font:600 12px var(--ff-m);letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
 .lead{color:var(--mut);max-width:62ch}
 .sec{height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-block:16px;scroll-margin-top:0}
-.workspace{flex:1;min-height:0;overflow:hidden}
+.workspace{flex:1;min-height:0;overflow:hidden;padding-bottom:44px}
 .sec h2{font-size:clamp(26px,4.2vw,42px);font-weight:700;margin-bottom:12px}
 .glass{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:4px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .glass::before,.glass::after{content:'';position:absolute;width:14px;height:14px;pointer-events:none}
@@ -51,17 +51,19 @@ p{margin:0}
 .glass::after{right:-1px;bottom:-1px;border-bottom:2px solid var(--cyan);border-right:2px solid var(--cyan)}
 
 /* hero */
-.hero{position:relative;flex:none;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero.sec{padding:0}
 #hcv{position:absolute;inset:0;width:100%;height:100%;display:block}
-.hero-in{position:relative;padding-block:clamp(12px,2vw,22px)}
-.hero h1{font-size:clamp(24px,4vw,44px);font-weight:700;text-transform:uppercase;letter-spacing:.01em;max-width:none}
-.hero h1 small{display:block;font:600 clamp(10px,1.2vw,13px) var(--ff-m);letter-spacing:.18em;color:var(--amber);margin-bottom:5px}
+.hero .wrap{max-width:none;margin-inline:0;padding-inline:clamp(16px,1.7vw,28px)}
+.hero-in{position:relative;padding-block:clamp(30px,16vh,130px) clamp(12px,2vh,24px)}
+.hero h1{font-size:clamp(36px,5.5vw,86px);font-weight:700;text-transform:uppercase;letter-spacing:.01em;max-width:22ch}
+.hero h1 small{display:block;font:600 clamp(12px,1.5vw,17px) var(--ff-m);letter-spacing:.22em;color:var(--amber);margin-bottom:18px}
 .hero h1 em{font-style:normal;color:var(--cyan);text-shadow:0 0 28px var(--glow)}
-.hero .lead{margin-top:8px;font-size:clamp(12px,1.3vw,15px);max-width:70ch}
-.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px;max-width:880px}
-.tile{display:flex;align-items:center;gap:10px;text-align:left;padding:7px 10px;background:var(--panel);border:1px solid var(--line);border-radius:4px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:border-color .2s,transform .2s}
+.hero .lead{margin-top:28px;font-size:clamp(17px,2vw,24px);max-width:56ch}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:clamp(48px,9vh,84px);max-width:1200px}
+.tile{display:flex;align-items:center;gap:16px;min-height:126px;text-align:left;padding:16px 20px;background:var(--panel);border:1px solid var(--line);border-radius:4px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:border-color .2s,transform .2s}
 .tile:hover{border-color:var(--cyan);transform:translateY(-2px)}
-.tile svg{flex:none;width:64px;height:48px}
+.tile svg{flex:none;width:80px;height:60px}
 .tile b{display:block;font:600 11px var(--ff-m);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
 .tile span.tx{font-size:18px}
 .ic-c{fill:none;stroke:var(--cyan);stroke-width:2.4;stroke-linecap:round}
@@ -69,8 +71,13 @@ p{margin:0}
 .ic-s{fill:none;stroke:var(--amber);stroke-width:1.8;stroke-dasharray:4 3}
 
 /* nav */
-.nav{position:relative;flex:none;z-index:20;background:var(--navbg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
-.nav .wrap{display:flex;align-items:center;gap:8px}
+.nav{position:fixed;left:0;right:0;bottom:env(safe-area-inset-bottom,0px);z-index:20;background:var(--navbg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);transform:translateY(calc(100% - 44px));transition:transform .36s cubic-bezier(.2,.8,.2,1);will-change:transform}
+.nav.open{transform:translateY(0)}
+.nav-toggle{display:flex;align-items:center;justify-content:center;gap:8px;width:min(100%,1200px);height:34px;margin-inline:auto;border:0;background:none;color:var(--fg);font:600 12px var(--ff-m);letter-spacing:.08em;text-transform:uppercase}
+.nav-toggle svg{width:14px;height:14px;fill:none;stroke:var(--cyan);stroke-width:2;transition:transform .3s}
+.nav.open .nav-toggle svg{transform:rotate(180deg)}
+.nav .wrap{display:flex;align-items:center;gap:8px;visibility:hidden}
+.nav.open .wrap{visibility:visible}
 .nav-l{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
 .nav-l::-webkit-scrollbar{display:none}
 .nl{flex:none;white-space:nowrap;padding:9px 10px;font-size:13px;font-weight:500;color:var(--mut);background:none;border:0;border-bottom:2px solid transparent;text-decoration:none}
@@ -78,6 +85,9 @@ p{margin:0}
 .nl:hover,.nl.on{color:var(--fg);border-bottom-color:var(--cyan)}
 .thm{flex:none;width:36px;height:36px;border:1px solid var(--line2);border-radius:4px;background:none;display:grid;place-items:center}
 .thm svg{width:18px;height:18px;fill:none;stroke:var(--fg);stroke-width:2}
+.nav-prog{position:absolute;left:0;right:0;top:0;height:2px;background:var(--cyan);transform:scaleX(0);transform-origin:0 50%;box-shadow:0 0 10px var(--cyan)}
+.view-enter{animation:viewMorph .38s cubic-bezier(.2,.8,.2,1) both}
+@keyframes viewMorph{from{opacity:.78;transform:translateY(10px) scale(.99);clip-path:inset(2% 0 0 round 10px)}to{opacity:1;transform:none;clip-path:inset(0 round 0)}}
 
 /* theory */
 .rail{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:26px;border:1px solid var(--line);background:var(--panel);border-radius:4px}
@@ -158,6 +168,13 @@ input[type=range]{width:100%;accent-color:var(--cyan);min-width:0}
 .ctabs button{padding:10px 18px;border:1px solid var(--line2);border-radius:4px;background:none;font:600 15px var(--ff-d)}
 .ctabs button.on{background:var(--cyan);border-color:var(--cyan);color:var(--onacc)}
 .cas{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:24px;margin-top:20px;align-items:start}
+#casio.sec{padding-block:8px}
+#casio .eyebrow{display:none}
+#casio .ctabs{margin-top:14px}
+#casio .calc{gap:8px}
+.flow-toggle{min-width:0}
+.flow-toggle summary{cursor:pointer;padding:8px 10px;border:1px solid var(--line2);border-radius:4px;background:var(--panel);font:600 13px var(--ff-d)}
+.flow-toggle[open] summary{margin-bottom:8px;color:var(--cyan)}
 .fl{display:flex;flex-direction:column;align-items:center;padding:20px 16px}
 .nd{padding:12px 16px;border:1px solid var(--line2);border-radius:4px;background:var(--panel2);text-align:center;max-width:100%;overflow-x:auto}
 .nd.start{border-color:var(--cyan);font-size:18px}
@@ -227,7 +244,7 @@ kbd{font:600 12px var(--ff-m);border:1px solid var(--line2);border-bottom-width:
 .qact{margin-top:14px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .btn{padding:10px 20px;border:0;border-radius:4px;background:var(--cyan);color:var(--onacc);font:700 14px var(--ff-d);letter-spacing:.04em}
 .score{font:700 clamp(40px,8vw,64px) var(--ff-d);color:var(--cyan)}
-footer{display:none}
+footer{padding-block:32px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
 
 @media (max-width:960px){
   .th,.sb,.cas{grid-template-columns:minmax(0,1fr)}
@@ -235,19 +252,15 @@ footer{display:none}
   .fcs{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:720px){
-  .tiles{display:none}
-  .hero-in{padding-block:10px}
-  .hero h1{font-size:clamp(21px,5.8vw,30px);max-width:none}
-  .hero h1 small{margin-bottom:3px}
-  .hero .lead{font-size:12px;margin-top:5px}
-  .nl{padding:8px 9px;font-size:12px}
-  .cmp{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .fcard{padding:10px;gap:8px}
-  .fcard h3{font-size:18px}
-  .fcard .fn{font-size:16px}
-  .fcard .plot{max-height:150px}
-  .row{padding:7px}
-  .row .tx,.row .no{font-size:14px}
+  .hero-in{padding-block:clamp(20px,10vh,72px) 16px}
+  .hero h1{font-size:clamp(26px,7vw,40px);max-width:none}
+  .hero .lead{font-size:14px;margin-top:14px;max-width:none}
+  .tiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:20px}
+  .tile{min-height:78px;flex-direction:column;align-items:flex-start;gap:4px;padding:8px}
+  .tile svg{width:34px;height:24px}
+  .tile b{font-size:10px;letter-spacing:.02em}
+  .tile span.tx{font-size:13px}
+  .cmp{grid-template-columns:1fr}
   .rail button{padding:10px}
   .rail button span{font-size:13px}
   .rail button em{display:none}
@@ -255,59 +268,33 @@ footer{display:none}
 }
 @media (max-width:620px){
   .fcs{grid-template-columns:1fr}
-  .sec{padding-block:12px}
-  .wrap{padding-inline:12px}
-  .sec h2{font-size:clamp(22px,6vw,28px)}
-  .lead{font-size:13px}
-  .ctabs{gap:5px;margin-top:14px}
-  .ctabs button{padding:7px 9px;font-size:12px}
-  .calc{padding:12px}
-  .calc-entry{grid-template-columns:minmax(0,1fr) 92px}
-  .fcs{gap:8px;margin-top:12px}
-  .fc,.fc-in{height:150px;min-height:150px}
-  .fc-f,.fc-b{padding:12px}
   .brs{--n:1!important;padding-top:6px;gap:16px}
   .brs::before{display:none}
   .br::before{display:none}
   .br{border-left:2px solid var(--line2);padding-left:12px}
+  .flow-toggle:not([open]) .fl{display:none}
 }
 @media (prefers-reduced-motion: reduce){
   .fc-in,.tile,.lim{transition:none}
+  .view-enter{animation:none}
 }
 </style>
 
-<header class="hero" id="top">
+<main class="workspace">
+<section class="sec hero" id="home">
   <canvas id="hcv" aria-hidden="true"></canvas>
   <div class="wrap hero-in">
     <h1><small>BÀI 3</small>Đường <em>tiệm cận</em> của đồ thị hàm số</h1>
-    <p class="lead">Chọn một mục để học, thử đồ thị, bấm máy và ôn tập ngay trên cùng một màn hình.</p>
+    <p class="lead">Ba loại đường tiệm cận, hai dạng hàm số thường gặp và một quy trình bấm máy Casio, gói trong một trang. Mọi đồ thị bên dưới đều kéo, trượt và biến hình được.</p>
     <div class="tiles">
       <button class="tile" data-go="0"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="ic-v" d="M32 2V46"/><path class="ic-c" d="M35 4C35 28 42 38 62 40M29 44C29 20 22 10 2 8"/></svg><div><b>Tiệm cận đứng</b><span class="tx">$x=a$</span></div></button>
       <button class="tile" data-go="1"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="ic-s" d="M2 18H62"/><path class="ic-c" d="M4 44C18 40 30 28 38 22C46 17 54 17 62 17.5"/></svg><div><b>Tiệm cận ngang</b><span class="tx">$y=m$</span></div></button>
       <button class="tile" data-go="2"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="ic-s" d="M4 44L60 8"/><path class="ic-c" d="M4 28C10 36 24 32 34 26C44 20 52 14 60 6"/></svg><div><b>Tiệm cận xiên</b><span class="tx">$y=ax+b$</span></div></button>
     </div>
   </div>
-</header>
-
-<nav class="nav" aria-label="Menu nhanh">
-  <div class="wrap">
-    <div class="nav-l" id="navl">
-      <a class="nl" href="#ly-thuyet" data-k="0"><b>1</b>Tiệm cận đứng</a>
-      <a class="nl" href="#ly-thuyet" data-k="1"><b>2</b>Tiệm cận ngang</a>
-      <a class="nl" href="#ly-thuyet" data-k="2"><b>3</b>Tiệm cận xiên</a>
-      <a class="nl" href="#dang" data-k="3"><b>4</b>Dạng đặc biệt</a>
-      <a class="nl" href="#sandbox" data-k="4"><b>5</b>Thử nghiệm</a>
-      <a class="nl" href="#casio" data-k="5"><b>6</b>CASIO</a>
-      <a class="nl" href="#memory" data-k="6"><b>7</b>Mẹo nhớ</a>
-      <a class="nl" href="#quiz" data-k="7"><b>8</b>Ôn tập</a>
-    </div>
-    <button class="thm" id="thm" aria-label="Đổi giao diện sáng hoặc tối"><svg viewBox="0 0 24 24"><path d="M21 13.5A8.5 8.5 0 1 1 10.5 3a7 7 0 0 0 10.5 10.5z"/></svg></button>
-  </div>
-</nav>
-
-<main class="workspace">
+</section>
 <!-- LÝ THUYẾT -->
-<section class="sec" id="ly-thuyet">
+<section class="sec" id="ly-thuyet" hidden>
   <div class="wrap">
     <p class="eyebrow">Lý thuyết cốt lõi</p>
     <h2>Ba loại tiệm cận trên một đồ thị biến hình</h2>
@@ -444,7 +431,7 @@ footer{display:none}
 <section class="sec" id="memory" hidden>
   <div class="wrap">
     <p class="eyebrow">Ghi nhớ nhanh</p>
-    <h2>Thẻ ghi nhớ tiệm cận</h2>
+    <h2>Mẹo nhớ nhanh</h2>
     <p class="lead">Bấm vào thẻ để lật. Tự trả lời trước khi xem mặt sau.</p>
     <div class="fcs" id="fcs"></div>
   </div>
@@ -459,11 +446,32 @@ footer{display:none}
   </div>
 </section>
 </main>
-<footer><div class="wrap">Bài 3 · Đường tiệm cận của đồ thị hàm số. Đồ thị được vẽ trực tiếp bằng SVG, công thức bằng MathJax.</div></footer>
+
+<nav class="nav" id="nav" aria-label="Điều hướng bài học">
+  <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navl">
+    <span>Mở menu</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+  </button>
+  <div class="wrap">
+    <div class="nav-l" id="navl">
+      <a class="nl" href="#home" data-k="0"><b>0</b>Trang chủ</a>
+      <a class="nl" href="#ly-thuyet" data-k="1"><b>1</b>Đứng</a>
+      <a class="nl" href="#ly-thuyet" data-k="2"><b>2</b>Ngang</a>
+      <a class="nl" href="#ly-thuyet" data-k="3"><b>3</b>Xiên</a>
+      <a class="nl" href="#dang" data-k="4"><b>4</b>Dạng</a>
+      <a class="nl" href="#sandbox" data-k="5"><b>5</b>Thử</a>
+      <a class="nl" href="#casio" data-k="6"><b>6</b>CASIO</a>
+      <a class="nl" href="#memory" data-k="7"><b>7</b>Mẹo nhớ</a>
+      <a class="nl" href="#quiz" data-k="8"><b>8</b>Ôn tập</a>
+    </div>
+    <button class="thm" id="thm" aria-label="Đổi giao diện sáng hoặc tối"><svg viewBox="0 0 24 24"><path d="M21 13.5A8.5 8.5 0 1 1 10.5 3a7 7 0 0 0 10.5 10.5z"/></svg></button>
+  </div>
+  <div class="nav-prog" id="prog"></div>
+</nav>
 
 <script>window.MathJax={startup:{typeset:false},svg:{fontCache:'none'},options:{enableMenu:false}};</script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 (function(){
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -649,25 +657,41 @@ function heroDraw(t){
   hx.globalAlpha=1;
 }
 let heroVis=true;
-new IntersectionObserver(en=>{heroVis=en[0].isIntersecting;},{}).observe($('#top'));
+new IntersectionObserver(en=>{heroVis=en[0].isIntersecting;},{}).observe($('#home'));
 addEventListener('resize',()=>{hrs();moveInd();});
 
 /* ---------- NAV ---------- */
 const navL=$$('.nl');
 function setNav(k){navL.forEach(a=>a.classList.toggle('on',+a.dataset.k===k));const a=navL[k];if(a&&a.scrollIntoView&&$('#navl').scrollWidth>$('#navl').clientWidth){const c=$('#navl');c.scrollTo({left:a.offsetLeft-16,behavior:reduce?'auto':'smooth'});}}
-const views=['ly-thuyet','ly-thuyet','ly-thuyet','dang','sandbox','casio','memory','quiz'];
+const nav=$('#nav'),navToggle=$('#navToggle');
+function setNavOpen(open){
+  nav.classList.toggle('open',open);
+  navToggle.setAttribute('aria-expanded',String(open));
+  navToggle.querySelector('span').textContent=open?'Đóng menu':'Mở menu';
+  if(!open&&nav.contains(document.activeElement)&&document.activeElement!==navToggle)navToggle.focus({preventScroll:true});
+}
+navToggle.addEventListener('click',()=>setNavOpen(!nav.classList.contains('open')));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')setNavOpen(false);});
+const views=['home','ly-thuyet','ly-thuyet','ly-thuyet','dang','sandbox','casio','memory','quiz'];
 function showView(id,k){
-  $$('.workspace > .sec').forEach(section=>{section.hidden=section.id!==id;});
-  if(k<3)goTab(k);
+  const previous=$('.workspace > .sec:not([hidden])'),next=$('#'+id);
+  if(!next)return;
+  setNavOpen(false);
+  if(k>=1&&k<=3)goTab(k-1);
+  $$('.workspace > .sec').forEach(section=>{section.hidden=section!==next;});
   setNav(k);
-  const active=$('#'+id);
-  active.scrollTop=0;
+  next.scrollTop=0;
+  if(previous!==next&&!reduce){
+    const wrap=$('.wrap',next);
+    if(wrap){wrap.classList.remove('view-enter');void wrap.offsetWidth;wrap.classList.add('view-enter');}
+  }
 }
 navL.forEach(a=>a.addEventListener('click',e=>{
   e.preventDefault();const k=+a.dataset.k;
   showView(views[k],k);
 }));
-$$('.tile').forEach(t=>t.addEventListener('click',()=>showView('ly-thuyet',+t.dataset.go)));
+$$('.tile').forEach(t=>t.addEventListener('click',()=>showView('ly-thuyet',+t.dataset.go+1)));
+setNav(0);
 $('#thm').addEventListener('click',()=>{
   const r=document.documentElement;
   const cur=r.dataset.theme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
@@ -815,9 +839,11 @@ function evaluatePractice(expression,xInput){
   return result;
 }
 const cs={tcn:1,tcd:1,tcx:1};let cTab='tcn';
+let flowOpen=!matchMedia('(max-width:620px)').matches;
 function casioView(){
   const key=cTab,o=cs[key],f=FL[key];
   const flow='<div class="glass fl"><div class="nd start">'+f.start+'</div><i class="ar"></i><div class="nd q">'+f.q+'</div><div class="brs n'+f.br.length+'">'+f.br.map(b=>'<div class="br"><div class="cond">'+b.c+'</div><div class="nd res '+b.k+'">'+b.r+'</div></div>').join('')+'</div></div>';
+  const flowPanel='<details class="flow-toggle" id="flowToggle"'+(flowOpen?' open':'')+'><summary>Sơ đồ nhận dạng</summary>'+flow+'</details>';
   let calc='';
   if(key==='tcn'){
     const x=o*1e9,v=F.tcn(x),sg=o>0?'':'−';
@@ -856,8 +882,8 @@ function casioView(){
     '<label for="practiceX">GIÁ TRỊ X<input id="practiceX" type="text" inputmode="decimal" value="'+practice.x+'" aria-label="Giá trị X để thay vào biểu thức"></label></div>'+
     keypad+'<button type="button" class="calc-equals" data-calc-key="equals">= Tính</button>'+
     '<div class="calc-display" id="practiceDisplay" role="status" aria-live="polite"><span>Kết quả</span><output id="practiceResult">Bấm = để tính</output></div></div>';
-  $('#cas').innerHTML=rich(flow)+'<div class="glass calc">'+rich(calc)+'</div>';
-  $('#cas .calc').insertAdjacentHTML('beforeend',practiceUI);
+  $('#cas').innerHTML=rich(flowPanel)+'<div class="glass calc">'+rich(calc)+practiceUI+'</div>';
+  $('#flowToggle').addEventListener('toggle',e=>{flowOpen=e.currentTarget.open;});
   if(!reduce)gsap.from('#cas > *',{y:16,opacity:.4,duration:.45,stagger:.08,ease:'power2.out',clearProps:'all'});
 }
 $('#ctabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cTab=b.dataset.c;$$('#ctabs button').forEach(x=>x.classList.toggle('on',x===b));casioView();});
@@ -902,7 +928,7 @@ $('#cas').addEventListener('click',e=>{
   if(key==='clear')input.value='';
   else if(key==='backspace'){
     const start=input.selectionStart??input.value.length,end=input.selectionEnd??start;
-    input.setRangeText('',start===end?Math.max(0,start-1):start,end,'end');
+    input.setRangeText(start===end?input.value.slice(0,Math.max(0,start-1)): '',start===end?Math.max(0,start-1):start,end,'end');
   }else{
     const start=input.selectionStart??input.value.length,end=input.selectionEnd??start;
     input.setRangeText(key,start,end,'end');
@@ -959,6 +985,7 @@ function init(){
   hrs();miniPlots();sbBuild();sbRender();casioView();fcBuild();quiz();
   requestAnimationFrame(()=>{moveInd();});
   setNav(0);
+  gsap.registerPlugin(ScrollTrigger);
   const t0=performance.now();
   gsap.ticker.add(()=>{
     const t=(performance.now()-t0)/1000;
@@ -966,7 +993,10 @@ function init(){
     if(heroVis&&!reduce)heroDraw(t);
   });
   if(reduce){probe(1.5);}
-  if(!reduce)gsap.fromTo('.workspace > .sec:not([hidden]) .wrap',{opacity:.75,y:8},{opacity:1,y:0,duration:.35,ease:'power2.out',clearProps:'transform'});
+  if(!reduce){
+    gsap.to('#prog',{scaleX:1,ease:'none',scrollTrigger:{trigger:document.body,start:'top top',end:'bottom bottom',scrub:.2}});
+    $$('.glass,.sec .lead,.sec h2').forEach(el=>gsap.from(el,{y:26,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 94%',once:true}}));
+  }
   document.fonts&&document.fonts.ready.then(moveInd);
 }
 const rdy=(window.MathJax&&MathJax.startup&&MathJax.startup.promise)||Promise.resolve();
